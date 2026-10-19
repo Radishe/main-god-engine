@@ -1,0 +1,34 @@
+# ---- 编辑器 / IDE ----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- 操作系统 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---- 临时与缓存 ----
+*.tmp
+*.bak
+*.log
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ---- 凭证 / 本地配置（切勿提交）----
+.env
+.env.*
+*.local
+
+# ---- 对话原始导出与浏览器缓存 ----
+# 网页另存为会产生一个同名 _files/ 资源目录（JS/CSS/图标，体积大且无内容）
+*_files/
+*.html
+
+# ---- 一次性抓取产物 ----
+# 若重新抓取分享链接，产生的原始 JSON/临时文本不入库
+_share_raw.*
+_extracted.*
