@@ -32,3 +32,7 @@ __pycache__/
 # 若重新抓取分享链接，产生的原始 JSON/临时文本不入库
 _share_raw.*
 _extracted.*
+# ---- 提交信息临时文件 ----
+_commit*.txt
+_cm.txt
+_commitmsg.txt
