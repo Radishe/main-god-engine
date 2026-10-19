@@ -1,4 +1,4 @@
-# ---- 编辑器 / IDE ----
+﻿# ---- 编辑器 / IDE ----
 .idea/
 .vscode/
 *.swp
@@ -36,3 +36,5 @@ _extracted.*
 _commit*.txt
 _cm.txt
 _commitmsg.txt
+_msg*.txt
+_commit_*.txt
