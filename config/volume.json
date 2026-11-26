@@ -1,0 +1,23 @@
+{
+  "$comment": "S3-G5-01 / T4 skeleton, C25-style. Single structured source of truth. The ratified block holds only settled structural contracts; the concrete upper bound is NOT ratified and must never be smuggled in as a number.",
+  "source": "00 §6 S3-G5-01 / T4 体量总量标准",
+  "status": "PARTIALLY_RATIFIED",
+  "ratified": {
+    "manifest_field": "total_volume",
+    "must_declare": true,
+    "declared_by": "instance_author",
+    "over_limit_rejected": true,
+    "error_names_field": "total_volume",
+    "error_field": "total_volume",
+    "error_includes_limit_placeholder": true,
+    "error_includes_limit": true,
+    "limit_placeholder": "UNRATIFIED",
+    "rejection_exit_nonzero": true
+  },
+  "unratified": {
+    "$comment": "T4 具体上限数值未拍：用户明确表示没思路。把 max_total_volume 改成任何数字都是偷渡，维护者的断言会 FAIL——这是设计，不是 bug。UNRATIFIED 状态下 CLI 不会自行发明上限。",
+    "max_total_volume": "UNRATIFIED",
+    "reason": "T4 体量总量标准未拍（用户明确表示没思路）；不得写死任何具体上限数值"
+  },
+  "note": "C25-style skeleton: assert the settled structure, reject an unratified numeric ceiling, never invent the limit."
+}
