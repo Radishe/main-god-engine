@@ -1,0 +1,17 @@
+{
+  "$comment": "P7 F4 arcane instance. Pure declaration (D15): no executable code fields, no credits/reward直通字段. Axes mana/spirit are new axes absent from F1/F2/D1; hp overlaps F1 so the demo graph stays connected. All axis values are integers; every event targets a declared axis.",
+  "instance_id": "F4",
+  "instance_type": "arcane",
+  "axes": {"hp": 90, "mana": 70, "spirit": 35},
+  "events": [
+    {"tick": 1, "kind": "channel", "axis": "mana", "delta": -9, "label": "ritual_opening"}
+  ],
+  "render_profile": "3d",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "$comment": "UNRATIFIED (D18): volume is a structural placeholder for the engine to recompute under D12, not a payout. No unratified game-rule numbers are introduced.",
+    "volume": 6,
+    "completion_basis": "structural",
+    "ratification": "UNRATIFIED"
+  }
+}

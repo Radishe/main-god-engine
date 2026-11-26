@@ -1,0 +1,44 @@
+{
+  "$comment": "Q4 / 00 §7 S4-G3-01：四份贡献与版权契约文档的必需小节标题登记。每份文档必须存在、非空，并逐字包含这里登记的全部标题。内容只登记标题，不在本文件写入未拍板规则。",
+  "version": 1,
+  "source": "00 §10 Q4 / 00 §7 S4-G3-01 / 00 §7 S4-G3-02",
+  "documents": {
+    "docs/CONTRIBUTING.md": {
+      "required_sections": [
+        "贡献通道",
+        "提交前自检",
+        "审核与合入",
+        "AI 辅助生成内容责任",
+        "训练数据供应链",
+        "项目方保留移除权"
+      ]
+    },
+    "docs/SCHEMA.md": {
+      "required_sections": [
+        "声明式副本清单",
+        "结算清单与冻结字段",
+        "claims 结构化证据",
+        "场景规则标签",
+        "字段扩展与版本锁定"
+      ]
+    },
+    "docs/REVIEW.md": {
+      "required_sections": [
+        "分层治理权限",
+        "审核 checklist",
+        "机检与人工判断",
+        "CODEOWNERS 与 gate-approved 标签",
+        "社区内容池与同人副本"
+      ]
+    },
+    "docs/TAKEDOWN.md": {
+      "required_sections": [
+        "适用范围",
+        "移除请求的提出",
+        "处置方式",
+        "未拍板事项",
+        "项目方保留移除权"
+      ]
+    }
+  }
+}

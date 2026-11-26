@@ -1,0 +1,38 @@
+{
+  "$comment": "P5 包自有命名空间配置。render_profile 仅是元数据占位（D17），affects_settlement=false；呈现管线切换在原型阶段不触发任何真实渲染。取值与只读契约 gates/stubs/loader.json 保持一致。",
+  "version": 1,
+  "mode": "metadata_placeholder",
+  "affects_settlement": false,
+  "profiles": {
+    "3d": {
+      "id": "3d",
+      "pipeline": "realistic_3d",
+      "presentation": {
+        "projection": "perspective",
+        "lighting": "pbr",
+        "asset_hint": "mesh"
+      },
+      "description": "写实 3D 呈现管线（占位元数据）"
+    },
+    "2d_flat": {
+      "id": "2d_flat",
+      "pipeline": "flat_2d",
+      "presentation": {
+        "projection": "orthographic",
+        "lighting": "unlit",
+        "asset_hint": "sprite"
+      },
+      "description": "平面 2D 呈现管线（占位元数据）"
+    },
+    "graffiti": {
+      "id": "graffiti",
+      "pipeline": "stylized_graffiti",
+      "presentation": {
+        "projection": "orthographic",
+        "lighting": "toon",
+        "asset_hint": "sprite"
+      },
+      "description": "涂鸦风格呈现管线（占位元数据）"
+    }
+  }
+}

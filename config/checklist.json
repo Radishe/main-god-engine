@@ -1,0 +1,105 @@
+{
+  "$comment": "S4-G2-01 结构化结论：08 §2 的 11 项审核 checklist 逐项闭环。status 只允许 defined / removed；defined 项必须带被检查对象定义，removed 项不得带定义。被检查对象只引用已拍板文档，未拍板数值不在此发明。",
+  "version": 1,
+  "source": "08 §2 / 00 §7 S4-G2-01 / 00 §7 S4-G2-02",
+  "status_enum": ["defined", "removed"],
+  "items": [
+    {
+      "id": 1,
+      "text": "副本 ID 唯一，版本号合规",
+      "status": "removed",
+      "reason": "无版本号制度；『版本号』未拍板（08 §2.1 F08），不发明制度",
+      "source_ref": "08 §2.1 / docs/_reports/全量审计报告.md A5"
+    },
+    {
+      "id": 2,
+      "text": "每个属性轴有合理的取值范围声明",
+      "status": "defined",
+      "definition": {
+        "object": "属性轴取值范围声明",
+        "source_ref": "01 §2（概念已定义）/ 08 §2.1 表",
+        "judge": "machine",
+        "check": "声明式副本逐轴声明取值范围；由 tools/validate.py 按 Schema 机检"
+      }
+    },
+    {
+      "id": 3,
+      "text": "can_modify_persistent_state 为 false",
+      "status": "removed",
+      "reason": "该字段从未定义，且与第 11 项实现互斥；D15 已把边界改由贡献通道与禁止导入清单承载",
+      "source_ref": "08 §2.3 / T6 / D15 / gates/stubs/forbidden_imports.json"
+    },
+    {
+      "id": 4,
+      "text": "结算模板 ID 存在",
+      "status": "removed",
+      "reason": "结算模板库与模板 ID 均不存在；不发明模板库",
+      "source_ref": "08 §2.1 F04 / docs/_reports/全量审计报告.md A5"
+    },
+    {
+      "id": 5,
+      "text": "理论最高总评分 ≥ 基准分 × 该阶位最低比值",
+      "status": "removed",
+      "reason": "『基准分』与『该阶位最低比值』均无定义；D20 已改走 claims 结构化证据 + 达成率 + 系数链，旧式基准分比较不再作为检查项",
+      "source_ref": "08 §2.2 / F06 / D18 / D20 / config/scoring.json"
+    },
+    {
+      "id": 6,
+      "text": "推导出的副本阶位与任务分值设计匹配（无畸高单任务）",
+      "status": "removed",
+      "reason": "阶位推导算法不存在；D21 改用统一阶位尺与份额上限约束，不再按本项推导",
+      "source_ref": "08 §2.1 / 04 §7 / D20 / D21"
+    },
+    {
+      "id": 7,
+      "text": "公证物品/能力建议基准值在品质参考区间内",
+      "status": "defined",
+      "definition": {
+        "object": "物品/能力建议基准值（suggested_base_value）与品质参考区间",
+        "source_ref": "06 §1.2（品质→基准值区间机制）/ 08 §2.2（宾语为物品定价，已定义）",
+        "judge": "human",
+        "check": "L1 核对作者建议基准值落在品质参考区间；区间具体数值未拍板，按已登记来源执行，不在此写死"
+      }
+    },
+    {
+      "id": 8,
+      "text": "绑定类型与物品稀有度匹配",
+      "status": "defined",
+      "definition": {
+        "object": "绑定类型与物品稀有度",
+        "source_ref": "06 §2（三种绑定类型注册时固定）/ 08 §2.1 表",
+        "judge": "machine",
+        "check": "注册申请中绑定类型与稀有度组合符合 06 §2 的适用约束"
+      }
+    },
+    {
+      "id": 9,
+      "text": "家族变体匹配家族风格标签",
+      "status": "defined",
+      "definition": {
+        "object": "家族风格标签与家族变体",
+        "source_ref": "04 §6（家族风格标签）/ 08 §4 / 08 §2.1 表",
+        "judge": "human",
+        "check": "L1 只做二元判断：变体设定是否匹配声明的家族风格标签，不审剧情衔接"
+      }
+    },
+    {
+      "id": 10,
+      "text": "家族变体的魔改程度满足最低差异要求",
+      "status": "removed",
+      "reason": "魔改程度无计算方式、无最低差异标准，且比较对象『母本』未定义（F07）；不发明标准",
+      "source_ref": "08 §2.1 / 04 §7 / docs/_reports/全量审计报告.md A6"
+    },
+    {
+      "id": 11,
+      "text": "副本不含对主神接口的直接调用代码（静态扫描）",
+      "status": "defined",
+      "definition": {
+        "object": "副本中对主神接口的直接调用 / 引擎内部导入",
+        "source_ref": "D15（JSON 一等公民，DLL 显式高级通道）/ config/contribution.json / gates/stubs/forbidden_imports.json / I3",
+        "judge": "machine",
+        "check": "声明式通道静态扫描禁止令牌与引擎内部导入，命中即拒绝加载；DLL 高级通道走 D15 独立审核与受限沙盒，不在此项裸放行"
+      }
+    }
+  ]
+}

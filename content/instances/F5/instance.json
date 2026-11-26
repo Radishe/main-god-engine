@@ -1,0 +1,17 @@
+{
+  "$comment": "P7 F5 arena instance. Pure declaration (D15): no executable code fields, no credits/reward直通字段. Axes intersect F2 (health) and D1 (stamina) and add a unique focus axis; all values are integers and events target only declared axes.",
+  "instance_id": "F5",
+  "instance_type": "arena",
+  "axes": {"health": 85, "stamina": 45, "focus": 50},
+  "events": [
+    {"tick": 1, "kind": "strain", "axis": "focus", "delta": -6, "label": "crowd_pressure"}
+  ],
+  "render_profile": "graffiti",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "$comment": "UNRATIFIED (D18): volume is a structural placeholder for the engine to recompute under D12, not a payout. No unratified game-rule numbers are introduced.",
+    "volume": 7,
+    "completion_basis": "structural",
+    "ratification": "UNRATIFIED"
+  }
+}
