@@ -468,6 +468,27 @@ def _scan_instance_engine_imports():
     return hits
 
 
+def _scan_render_writes(render_dir):
+    """I6: the render layer must never write the ledger.
+
+    Static boundary check: no engine import, no ledger mutation calls. This is
+    the machine-checkable half of "render never touches the ledger"; the other
+    half is S1-G4-01's runtime SHA check (which P5 already satisfies).
+    """
+    if not render_dir.is_dir():
+        return None  # P5 not landed yet -> PENDING
+    forbidden = ("settle(", "commit(", ".credits", "_ledger", "from src.core",
+                 "import src.core")
+    hits = []
+    for path in sorted(render_dir.rglob("*.py")):
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            code = line.split("#", 1)[0]
+            for token in forbidden:
+                if token in code:
+                    hits.append("%s:%d:%s" % (path.name, lineno, token))
+    return hits
+
+
 def _runtime_snapshot_equal():
     """I8: admission snapshot deep-equals ledger; run the real engine if landed."""
     ledger_fixture = ROOT / "fixtures" / "f3-ledger.json"
@@ -519,7 +540,12 @@ def invariants_report():
                  "结算清单字段集冻结"))
     rows.append(("I5", "PASS" if "id" in required else "FAIL",
                  "词汇表条目含 id 且引用须命中"))
-    rows.append(("I6", "PENDING", "渲染层不写账本需运行时证据（render_profile 为占位，P5 未落地）"))
+    render_hits = _scan_render_writes(PROJECT_ROOT / "src" / "render")
+    if render_hits is None:
+        rows.append(("I6", "PENDING", "渲染层未落地（src/render 不存在）；P5 落地后自动激活"))
+    else:
+        rows.append(("I6", "FAIL" if render_hits else "PASS",
+                     "渲染层账本写入命中=%s" % (",".join(render_hits) or "0")))
     rows.append(("I7", "PASS" if "duplicate_settlement" in codes else "FAIL",
                  "error_codes 含 duplicate_settlement"))
     snap = _runtime_snapshot_equal()

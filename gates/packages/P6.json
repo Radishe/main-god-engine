@@ -3,7 +3,7 @@
   "title": "审核 checklist / 场景规则标签 / 分层治理 / 贡献与版权契约",
   "version": 1,
   "readonly": ["gates/stubs/settlement.json", "config/paths.json", "config/maintainers.json"],
-  "writable": ["docs/CONTRIBUTING.md", "docs/SCHEMA.md", "docs/REVIEW.md", "docs/TAKEDOWN.md", "tests/p6/", "config/p6/"],
+  "writable": ["docs/CONTRIBUTING.md", "docs/SCHEMA.md", "docs/REVIEW.md", "docs/TAKEDOWN.md", "tests/p6/", "config/p6/", "config/checklist.json", "config/docs.json"],
   "contracts": ["C15", "C17", "C27", "C29"],
   "owner_disputes": [],
   "shard_owner": "maintainer",
