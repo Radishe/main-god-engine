@@ -1,0 +1,12 @@
+{
+  "death_flow": "exit_and_settle",
+  "fields": [
+    "ability_ids",
+    "credits",
+    "item_ids",
+    "permanent_death",
+    "reincarnator_id"
+  ],
+  "permanent_death": false,
+  "field_set_equals_f3": true
+}
