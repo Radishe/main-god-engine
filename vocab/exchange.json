@@ -1,6 +1,6 @@
 [
   {
-    "$comment": "D20 set exchange rate 1:1; this entry is structural only — cost is a placeholder unit, not a tuned price. C14-01 checks id uniqueness / required fields; cost/effect computation remains an unimplemented assertion (expected red phase).",
+    "$comment": "P4/C14 兑换词汇条目。四字段 id/cost/effect/kind 齐全，id 全局唯一，kind 属于 enum<item|ability|bloodline|skill>。cost=1 仅为结构占位（structural placeholder），不是调参后的物品兑换价目：D20 的 1:1 是评分汇率，与物品兑换价无关。effect=structural_placeholder 是本词汇表登记的唯一合法占位效果；词汇表外的 effect 由 src/notary/exchange.py::is_known_effect 一律拒绝。",
     "id": "exchange/standard",
     "cost": 1,
     "effect": "structural_placeholder",

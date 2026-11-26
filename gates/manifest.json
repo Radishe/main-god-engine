@@ -42,7 +42,7 @@
     "sc": [
       {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["C09-01", "C10-01", "C13-01", "C14-01", "C30-01"], "note": "shared contract suite: waiting for P1/P3/P4 implementation, G1 golden path included"},
       {"gate": "G2", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["C01-01", "C11-01", "C12-01", "C25-01"], "note": "D14/D15/D16 已拍板，结构化结论落在共享 config/"},
-      {"gate": "G3", "layer": "config_driven", "status": "pending", "depends_on": ["config/scenes.json", "config/settlement_units.json"], "tests": ["C15-01", "C16-01"], "note": "剩余待拍板的场景标签与结算单元边界"}
+      {"gate": "G3", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["C15-01", "C16-01"], "note": "D13.22 骨架已落地：config/scenes.json 与 settlement_units.json 的已定部分 ratified、未拍部分显式 UNRATIFIED 且拒绝偷渡，断言验的是结构契约不变量，故从 config_driven 改 invariant 并激活"}
     ],
     "si": [
       {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["X01-01", "X02-01", "X03-01", "X04-01", "X05-01"], "note": "cross-stage handoff + package integration suite; no single stage owns these"},
