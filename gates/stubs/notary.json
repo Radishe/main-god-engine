@@ -1,0 +1,15 @@
+{
+  "$comment": "Shared notary contract stub. Interface shape only; P4 implements it.",
+  "version": 1,
+  "admission": {
+    "steps": ["validate_axes", "verify_asset_ids", "freeze_snapshot"],
+    "log_markers": ["notarized_axes", "notarized_assets", "snapshot_frozen"],
+    "on_failure": "reject_load_and_leave_ledger_unchanged"
+  },
+  "product": {
+    "rule": "unregistered ids cannot leave the instance",
+    "vocabulary_sources": ["vocab/items.json", "vocab/abilities.json"],
+    "on_violation": "reject_settlement_with_rejected_unnotarized"
+  },
+  "ownership": "P4"
+}

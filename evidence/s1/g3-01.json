@@ -1,0 +1,17 @@
+{
+  "A_F1_F2_F1": {
+    "reincarnator_id": "R-0001",
+    "credits": 1822,
+    "ability_ids": [],
+    "item_ids": [],
+    "permanent_death": false
+  },
+  "B_F1_F1_F2": {
+    "reincarnator_id": "R-0001",
+    "credits": 1822,
+    "ability_ids": [],
+    "item_ids": [],
+    "permanent_death": false
+  },
+  "deep_equal": true
+}

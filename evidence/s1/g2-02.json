@@ -1,0 +1,15 @@
+{
+  "test": "S1-G2-02",
+  "date": "2026-11-25",
+  "command": "python gates/tests/s1-g2-02.py",
+  "exit": 0,
+  "status": "PASS",
+  "fixture_ledger": "gates/fixtures/f3-ledger.json",
+  "fixture_manifest": "gates/fixtures/f4-settlement.json",
+  "credits_before": 1000,
+  "credit_delta": 137,
+  "credits_after": 1137,
+  "other_fields_deep_equal": true,
+  "source_fixture_mutated": false,
+  "mutation_check": "evidence/p1/mutation.log"
+}

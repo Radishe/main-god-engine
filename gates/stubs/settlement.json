@@ -1,0 +1,45 @@
+{
+  "$comment": "Shared contract stub. Structure only, no gameplay numbers. All packages import this; maintainer-owned. D18: claims added as a structured-evidence channel; field set locked by digest.",
+  "version": 2,
+  "settlement_manifest": {
+    "required": ["instance_id", "reincarnator_id", "completion", "credit_delta", "ability_ids", "item_ids"],
+    "optional": ["idempotency_key", "claims"],
+    "types": {
+      "instance_id": "string",
+      "reincarnator_id": "string",
+      "completion": "enum<success|failure|aborted>",
+      "credit_delta": "integer",
+      "ability_ids": "array<string>",
+      "item_ids": "array<string>",
+      "idempotency_key": "string",
+      "claims": "string"
+    },
+    "frozen": true,
+    "field_set_digest": "5c0406682f10bc766372553aaa57e13d6ce1ade3ea010e3c1cd84a9307f3f386",
+    "digest_rule": "sha256 of (sorted(required)+sorted(optional)) joined by comma; D18 constraint 3: any field-set change must update this digest via maintainer review",
+    "note": "Field set must not be extended by any package (invariant I4). claims is a JSON-encoded string carrying structured evidence; engine decodes it, never reads concrete axis names."
+  },
+  "claims_schema": {
+    "$comment": "D18: claims must be structured evidence, never a bare score/grade/credits number. Encoded as a JSON string so the frozen field set and X02 type probes stay stable.",
+    "encoding": "json_string",
+    "required": ["schema_version", "score", "volume", "main_share", "side_share", "main_failed", "event_flags"],
+    "forbidden_bare_keys": ["grade", "credits", "payout", "coefficient"],
+    "types": {
+      "schema_version": "integer",
+      "score": "integer",
+      "volume": "integer",
+      "main_share": "number",
+      "side_share": "number",
+      "main_failed": "boolean",
+      "event_flags": "array<string>"
+    },
+    "engine_may_read": ["schema_version", "score", "volume", "main_share", "side_share", "main_failed", "event_flags"],
+    "engine_must_not_read": ["hp", "atk", "def", "health", "hunger", "stamina"],
+    "note": "score/volume are EVIDENCE for the engine to recompute a rating, not a payout. The engine must never copy score directly into credits."
+  },
+  "error_codes": ["rejected_direct_write", "rejected_unnotarized", "duplicate_settlement", "invalid_field", "asset_not_found", "rejected_double_report", "rejected_unratified_scoring"],
+  "double_report_rule": {
+    "$comment": "D18 constraint 1: credit_delta stays required by the frozen field set, so a claims-based manifest carries credit_delta=0. Any non-zero credit_delta alongside claims is a second payout authority and is rejected unconditionally (even before the chain is enabled) so the loophole is probeable today.",
+    "rule": "reject claims + non-zero credit_delta with rejected_double_report"
+  }
+}

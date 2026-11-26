@@ -1,0 +1,4 @@
+engine_core=src/core
+scanned=5 files
+forbidden=hp,atk,def,health,hunger,stamina
+hits=0

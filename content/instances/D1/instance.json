@@ -1,0 +1,16 @@
+{
+  "$comment": "P7 D1 demo instance. Axis set intersects F1 (hp) and F2 (hunger), and adds a unique axis (stamina) — proves异构 per S2-G1-03. Pure declaration (D15), no executable code, no credits/reward直通字段.",
+  "instance_id": "D1",
+  "instance_type": "exploration",
+  "axes": {"hp": 80, "hunger": 50, "stamina": 60},
+  "events": [
+    {"tick": 1, "kind": "sprint", "axis": "stamina", "delta": -10, "label": "long_climb"}
+  ],
+  "render_profile": "graffiti",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "$comment": "Structural evidence only; D12 chain unratified (D18), no payout derived.",
+    "volume": 12,
+    "completion_basis": "structural"
+  }
+}

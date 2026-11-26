@@ -1,0 +1,26 @@
+{
+  "package": "P2",
+  "title": "结算清单 Schema / validation CLI / 错误码 / 体量与阶位刻度配置",
+  "version": 1,
+  "readonly": ["gates/stubs/settlement.json", "gates/stubs/fake_settle.py", "config/paths.json", "config/settlement.json"],
+  "writable": ["src/contract/", "tools/validate*", "tests/p2/", "config/p2/"],
+  "contracts": ["C22", "C28", "C31"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p2/*)",
+  "config_namespace": "config/p2/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [{"package": "P1", "needs": "账本字段集以生成校验规则"}],
+  "tests": [
+    {"id": "S4-G1-01", "spec_ref": "00 §7 S4-G1-01", "assert": "F5-1~F5-6 六个非法变体全部被拒且错误含字段名与位置"},
+    {"id": "S4-G1-03", "spec_ref": "00 §7 S4-G1-03", "assert": "CI 作业执行 validation CLI，失败时 PR 检查非通过"},
+    {"id": "S3-G5-01", "spec_ref": "00 §6 S3-G5-01", "assert": "虚报 total_volume 被拒且错误含上限值"}
+  ],
+  "shared_tests": [{"id": "X02-01", "role": "participant", "final_owner": "PX"}],
+  "global_invariants": ["I4", "I7"],
+  "blocked_by": [{"decision": "Q1", "unblock_when": "config/paths.json", "status_check": "file_exists", "effect": "技术栈决定 validation CLI 的 runner"}],
+  "downstream_dependents": ["P1", "P3", "P7"],
+  "definition_of_done": ["本包 3 条验收测试 PASS", "X02-01 桩一致性通过", "六非法变体回归绿"],
+  "note": "C05 已按拍板归 P1；本包专注 Schema 与 CLI。"
+}

@@ -1,0 +1,11 @@
+{
+  "$comment": "D16 / A7 结构化结论。共享契约，维护者所有。",
+  "source": "D16",
+  "death_flow": "exit_and_settle",
+  "counts_toward_erasure": true,
+  "revive": false,
+  "lethal_requires_declaration": true,
+  "erasure_state": "registered",
+  "non_erasure_state": "distinguishable",
+  "note": "01 §4.1 的「死亡是局部状态」不再作为死亡流程依据；07 §5 低阶保护改为退出并按未完成结算。"
+}

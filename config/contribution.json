@@ -1,0 +1,10 @@
+{
+  "$comment": "D15 结构化结论。共享契约，维护者所有。",
+  "source": "D15",
+  "primary_channel": "declarative_json",
+  "advanced_channel": "dll_optin",
+  "advanced_channel_requires": ["explicit_flag", "separate_review", "restricted_sandbox"],
+  "engine_semantics": "agnostic",
+  "validation": "schema_ci",
+  "note": "细化 D9 而非推翻：DLL 能力保留，但不再是默认路径。包派生的加载配置落在 config/<pkg>/*。"
+}

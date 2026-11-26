@@ -1,0 +1,26 @@
+{
+  "package": "P6",
+  "title": "审核 checklist / 场景规则标签 / 分层治理 / 贡献与版权契约",
+  "version": 1,
+  "readonly": ["gates/stubs/settlement.json", "config/paths.json", "config/maintainers.json"],
+  "writable": ["docs/CONTRIBUTING.md", "docs/SCHEMA.md", "docs/REVIEW.md", "docs/TAKEDOWN.md", "tests/p6/", "config/p6/"],
+  "contracts": ["C15", "C17", "C27", "C29"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p6/*)",
+  "config_namespace": "config/p6/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [{"package": "P2", "needs": "validation CLI 以接入 CI 审核"}],
+  "tests": [
+    {"id": "S4-G2-01", "spec_ref": "00 §7 S4-G2-01", "assert": "checklist 11 项状态取自 defined/removed 枚举，无第三类"},
+    {"id": "S4-G3-01", "spec_ref": "00 §7 S4-G3-01", "assert": "四份契约文档存在、非空、含登记小节"},
+    {"id": "C15-01", "spec_ref": "00 §12.4 / gates/tests/c15-01.py", "assert": "场景标签枚举来自 config/p6/scenes.json，非法标签被拒"}
+  ],
+  "shared_tests": [{"id": "S4-G4-02", "role": "participant", "final_owner": "PX"}],
+  "global_invariants": [],
+  "blocked_by": [{"decision": "SCENE_RULES", "unblock_when": "config/scenes.json", "status_check": "file_exists", "effect": "三个场景标签的具体规则内容需拍板"}],
+  "downstream_dependents": ["PX"],
+  "definition_of_done": ["本包 3 条验收测试 PASS", "CI 审核流程跑通一次"],
+  "note": "审查指出玩法治理层（家族/变体/副本准入）尚无包负责，见 00 §13.5 未修清单。"
+}

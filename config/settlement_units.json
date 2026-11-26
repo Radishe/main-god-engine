@@ -1,0 +1,19 @@
+{
+  "$comment": "C16 skeleton, C25-style. Single structured source of truth. SETTLED parts asserted by c16-01; UNRATIFIED boundary details are explicitly marked and must NOT be smuggled into the engine.",
+  "source": "01 §扭曲节点 / 04 §5 / D15",
+  "status": "PARTIALLY_RATIFIED",
+  "ratified": {
+    "unit_type": "anomaly_zone",
+    "is_legal_settlement_unit": true,
+    "manifest_parent_field": "parent_instance_id",
+    "must_go_through_settle": true,
+    "no_double_posting": true,
+    "code_channel": "opt_in_only"
+  },
+  "unratified": {
+    "$comment": "The exact boundary of what counts as an anomaly zone settlement unit is not decided (D15 enables it mechanically, but the rule is pending).",
+    "boundary_rules": "UNRATIFIED",
+    "reason": "扭曲节点作为结算单元的边界未定义；依赖 D15 的副本形态，但具体规则未拍"
+  },
+  "note": "C25-style skeleton: assert settled semantics, reject unratified field smuggling, never invent the boundary."
+}

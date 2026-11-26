@@ -1,0 +1,11 @@
+{
+  "test": "S1-G2-04",
+  "date": "2026-11-25",
+  "command": "python gates/tests/s1-g2-04.py",
+  "exit": 0,
+  "status": "PASS",
+  "instances": ["gates/fixtures/f1-instance-a.json", "gates/fixtures/f2-instance-b.json"],
+  "snapshot_deep_equals_preload_ledger": true,
+  "load_mutated_ledger": false,
+  "note": "admission snapshot is a deep copy; instance data stays in its own axis namespace"
+}

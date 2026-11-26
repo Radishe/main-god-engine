@@ -1,0 +1,36 @@
+{
+  "package": "P7",
+  "title": "示范副本内容（可多 agent 各写一份，按副本 ID 隔离）",
+  "version": 1,
+  "readonly": ["gates/stubs/settlement.json", "gates/stubs/loader.json", "config/settlement.json", "config/paths.json"],
+  "writable": ["content/instances/<自有副本 ID>/", "tests/p7/"],
+  "contracts": [],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "none (本包不写 config)",
+  "config_namespace": null,
+  "config_access": "readonly",
+  "runtime_depends_on": [
+    {"package": "P2", "needs": "Schema 与 validation CLI"},
+    {"package": "P3", "needs": "加载器与属性轴注册"},
+    {"package": "P4", "needs": "词汇表以引用合法物品/能力 ID"}
+  ],
+  "tests": [
+    {"id": "S2-G1-01", "spec_ref": "00 §5 S2-G1-01", "assert": "新增副本不改动引擎核心，文件位于 content/instances/"},
+    {"id": "S2-G1-03", "spec_ref": "00 §5 S2-G1-03", "assert": "副本含至少一根 F1/F2 均未使用的属性轴"},
+    {"id": "S4-G4-03", "spec_ref": "00 §7 S4-G4-03", "assert": "示范副本 >=3、属性轴集合不全同、render_profile 取值 >=2"}
+  ],
+  "shared_tests": [
+    {"id": "C30-01", "role": "participant", "final_owner": "PX"},
+    {"id": "S2-G2-02", "role": "participant", "final_owner": "PX", "note": "第三方复现属 human_in_loop"}
+  ],
+  "global_invariants": ["I1", "I4", "I5"],
+  "blocked_by": [
+    {"decision": "D15", "unblock_when": "docs/设计决议记录.md", "status_check": "contains:## D15", "effect": "副本形态（JSON / 代码通道）决定内容写法"},
+    {"decision": "Q1", "unblock_when": "config/paths.json", "status_check": "file_exists", "effect": "技术栈决定副本数据格式"}
+  ],
+  "downstream_dependents": [],
+  "definition_of_done": ["本包 3 条验收测试 PASS", "至少 3 个异构示范副本可加载"],
+  "note": "本包无架构契约，验收目标是「内容规模与异构覆盖」；多个 agent 各占一个副本 ID，互不写冲突。"
+}

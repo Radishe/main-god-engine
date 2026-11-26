@@ -1,0 +1,14 @@
+{
+  "$comment": "Maintainer-owned. Regenerate with check.py --write-package-hashes after an approved shard change. Agents cannot edit shards; this file detects tampering.",
+  "version": 1,
+  "date": "2026-11-25",
+  "shards": {
+    "P1.json": "9effb08c51faf100fb45fd07a7cae7e47da5f8c6a38206cc13ea4f2e2878378c",
+    "P2.json": "7334cb19d15a01d30431327751fbf70c066c547d7cd8a25fa71114c66baadb8b",
+    "P3.json": "b5ae330e15e9b1f6393f78b8a5d5a2aad09ea30dc3cfc2d068826b0c0469e379",
+    "P4.json": "68da24b3865c999a229a666ac823a92ea5d1c580fc5fe4ae54533b7505c6418a",
+    "P5.json": "e1c776118e20fbe4647cd3f0bd817e9dd1445a295be374d0e1ab7b155d66099b",
+    "P6.json": "f77e920dca63836bbad735584136b26498694a7bc79859d90f052cefc66bf09d",
+    "P7.json": "4ee950fb3631a7eea8c72346a1cb0d2259ee226d46cc6e505e57dc52aec410bd"
+  }
+}

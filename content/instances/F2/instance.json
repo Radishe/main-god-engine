@@ -1,0 +1,16 @@
+{
+  "$comment": "P7 F2 survival instance. Pure declaration (D15), no executable code, no credits/reward直通字段. Different axis set from F1 to prove异构.",
+  "instance_id": "F2",
+  "instance_type": "survival",
+  "axes": {"health": 100, "hunger": 60},
+  "events": [
+    {"tick": 1, "kind": "deplete", "axis": "hunger", "delta": -5, "label": "long_watch"}
+  ],
+  "render_profile": "2d_flat",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "$comment": "Structural evidence only; D12 chain unratified (D18), no payout derived.",
+    "volume": 8,
+    "completion_basis": "structural"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$comment": "Integration job definition consumed by X04-01. Package outputs are assembled and exercised together; per-package green is never sufficient.",
+  "version": 1,
+  "packages": ["P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+  "assemble_from": ["gates/stubs/*", "src/*", "vocab/*", "content/instances/*", "config/*"],
+  "run_order": [
+    "check.py --stage s1 --run",
+    "check.py --stage sc --run",
+    "C30-01 (golden path)",
+    "I1..I8 (global invariants)",
+    "X01-01, X02-01, X03-01, X05-01"
+  ],
+  "pass_rule": "every step exits 0, zero FAIL, zero PENDING",
+  "evidence": "evidence/int/integration.log",
+  "note": "No single package owns this job; maintainer-owned. Any package commit triggers the assembled run."
+}

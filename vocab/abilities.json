@@ -1,0 +1,19 @@
+{
+  "$comment": "P4 vocabulary source. Entry shape per gates/stubs/vocabulary.json. enabled_in declares which instances an ability applies to.",
+  "entries": [
+    {
+      "id": "ability/combat_instinct",
+      "cost": 1,
+      "effect": "structural_placeholder",
+      "kind": "ability",
+      "enabled_in": ["F1"]
+    },
+    {
+      "id": "ability/survival_sense",
+      "cost": 1,
+      "effect": "structural_placeholder",
+      "kind": "ability",
+      "enabled_in": ["F2"]
+    }
+  ]
+}

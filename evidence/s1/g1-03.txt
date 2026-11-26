@@ -1,0 +1,5 @@
+ticks=100
+local_hp_before=100
+local_hp_after=0
+ledger_sha_before=51bae8da145aab918ecde10f732b795cefdf8d94a0ee0c511ede21b62c3264ed
+ledger_sha_after=51bae8da145aab918ecde10f732b795cefdf8d94a0ee0c511ede21b62c3264ed

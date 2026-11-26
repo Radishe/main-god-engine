@@ -1,0 +1,14 @@
+{
+  "$comment": "D15 code channel boundary. Instances must not import engine internals. Single source of truth referenced by loader import guard (C12) and invariant I3.",
+  "version": 1,
+  "forbidden_tokens": [
+    "from src.core",
+    "import src.core",
+    "from core.",
+    "import ledger",
+    "from src.notary",
+    "import src.notary"
+  ],
+  "on_violation": "reject_load_with_rejected_import",
+  "note": "Declarative JSON is the primary channel; DLL/code is opt-in only (D15). This list guards the boundary regardless of channel."
+}

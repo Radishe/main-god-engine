@@ -1,0 +1,24 @@
+{
+  "package": "P5",
+  "title": "render_profile 管线切换 / 呈现层与数据层隔离",
+  "version": 1,
+  "readonly": ["gates/stubs/loader.json", "gates/stubs/settlement.json", "config/paths.json"],
+  "writable": ["src/render/", "tests/p5/", "config/p5/"],
+  "contracts": ["C04"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p5/*)",
+  "config_namespace": "config/p5/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [{"package": "P3", "needs": "副本加载时传入 render_profile 元数据"}],
+  "tests": [
+    {"id": "S1-G4-01", "spec_ref": "00 §4 S1-G4-01", "assert": "两取值各在日志出现 >=1 次，账本 SHA-256 不变，两份清单字段集相同"}
+  ],
+  "shared_tests": [],
+  "global_invariants": ["I6"],
+  "blocked_by": [],
+  "downstream_dependents": ["P7"],
+  "definition_of_done": ["S1-G4-01 PASS", "I6 仍绿", "evidence/p5/mutation.log 存在"],
+  "note": "唯一无阻塞包；可作为并行开发的第一个开工点。"
+}

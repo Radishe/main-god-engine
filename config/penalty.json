@@ -1,0 +1,15 @@
+{
+  "$comment": "D14 结构化结论。共享契约，维护者所有。",
+  "source": "D14",
+  "purpose": "narrative_tension",
+  "economic_balancing": false,
+  "executor": "maingod_engine",
+  "anchor": "task_volume",
+  "deduction_chain": "simplified",
+  "deduction_order": ["credits"],
+  "attribute_valuation_required": false,
+  "item_valuation_required": false,
+  "permanent_item_conflict": "not_applicable",
+  "erasure_after_failures": 3,
+  "note": "D1 机制骨架保留；A→B→C 简化为只扣兑换点，因而不需要统一估值单位、permanent 裁决与降阶机制。"
+}

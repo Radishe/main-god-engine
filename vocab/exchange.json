@@ -1,0 +1,10 @@
+[
+  {
+    "$comment": "D20 set exchange rate 1:1; this entry is structural only — cost is a placeholder unit, not a tuned price. C14-01 checks id uniqueness / required fields; cost/effect computation remains an unimplemented assertion (expected red phase).",
+    "id": "exchange/standard",
+    "cost": 1,
+    "effect": "structural_placeholder",
+    "kind": "item",
+    "enabled_in": ["F1", "F2", "D1"]
+  }
+]

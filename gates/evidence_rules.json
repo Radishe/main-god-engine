@@ -1,0 +1,12 @@
+{
+  "$comment": "Maintainer-owned. Tests listed here may not turn green without reproducible evidence. Closes the red-team finding that FAIL->PASS is merely 'improved' and a 3-line fake test could claim the golden path.",
+  "version": 1,
+  "require_evidence_on_improve": [
+    {
+      "test": "C30-01",
+      "reason": "golden path: must call the real Engine.settle() and be guarded by a mutation recipe",
+      "must_call": ["src.core.ledger.Engine", "settle"],
+      "must_have_mutation_guard": true
+    }
+  ]
+}

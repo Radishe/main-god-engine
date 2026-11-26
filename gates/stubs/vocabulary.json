@@ -1,0 +1,17 @@
+{
+  "$comment": "Shared vocabulary contract stub. Entry shape only; no costs or effects decided.",
+  "version": 1,
+  "entry_schema": {
+    "required": ["id", "cost", "effect", "kind", "enabled_in"],
+    "id_unique": true,
+    "id_format": "string",
+    "kind": "enum<item|ability|bloodline|skill>"
+  },
+  "sources": ["vocab/items.json", "vocab/abilities.json", "vocab/exchange.json"],
+  "rules": [
+    "settlement manifest ids must hit a vocabulary entry",
+    "enabled_in declares which instances an ability applies to",
+    "effects outside the vocabulary are rejected"
+  ],
+  "ownership": "P4"
+}

@@ -1,0 +1,35 @@
+{
+  "package": "P3",
+  "title": "副本加载 / 属性轴注册 / 快照 / 入场公证 / 动态库边界",
+  "version": 1,
+  "decision_log": "2026-11-12 拍板：C10 入场公证三件事归本包（加载时校验）。",
+  "readonly": ["gates/stubs/loader.json", "gates/stubs/notary.json", "gates/stubs/fake_notary.py", "gates/stubs/fake_settle.py", "config/paths.json", "config/settlement.json"],
+  "writable": ["src/loader/", "tests/p3/", "config/p3/"],
+  "contracts": ["C03", "C06", "C10", "C12", "C16", "C24"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p3/*)",
+  "config_namespace": "config/p3/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [
+    {"package": "P1", "needs": "账本快照来源"},
+    {"package": "P2", "needs": "属性轴取值范围声明"},
+    {"package": "P4", "needs": "产物公证接口（包级可用 fake_notary）"}
+  ],
+  "tests": [
+    {"id": "C10-01", "spec_ref": "00 §5 S2-G3 / gates/tests/c10-01.py", "assert": "入场三件事各一条用例，任一失败则拒绝加载且账本不变"},
+    {"id": "S1-G1-02", "spec_ref": "00 §4 S1-G1-02", "assert": "新增属性轴 stamina 仅改数据，引擎 diff 为空"},
+    {"id": "C12-01", "spec_ref": "00 §12.4 / gates/tests/c12-01.py", "assert": "带逻辑副本不得 import 引擎内部命名空间"},
+    {"id": "C16-01", "spec_ref": "00 §12.4 / gates/tests/c16-01.py", "assert": "扭曲节点作为独立结算单元且父/子不重复落账"}
+  ],
+  "shared_tests": [{"id": "C30-01", "role": "participant", "final_owner": "PX"}],
+  "global_invariants": ["I2", "I3", "I8"],
+  "blocked_by": [
+    {"decision": "D15", "unblock_when": "docs/设计决议记录.md", "status_check": "contains:## D15", "effect": "代码通道边界决定加载器隔离方式"},
+    {"decision": "A7", "unblock_when": "config/states.json", "status_check": "file_exists", "effect": "死亡流程影响 C24 的加载时序"}
+  ],
+  "downstream_dependents": ["P7"],
+  "definition_of_done": ["本包 4 条验收测试 PASS", "I2/I3/I8 仍绿", "X02-01 桩一致性通过"],
+  "note": "C10 归本包后，P4 的 C10-01 降为参与项；fake_notary 支撑包级自检。"
+}

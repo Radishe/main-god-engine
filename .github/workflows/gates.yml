@@ -1,0 +1,68 @@
+name: gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  # Gate surface protection: any change to the referee must be explicit.
+  # CODEOWNERS enforces human review on GitHub; this job requires a visible label
+  # so a gate rewrite cannot slip through as an ordinary commit.
+  protect-referee:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: CODEOWNERS must not be a placeholder
+        run: |
+          if grep -q 'REPLACE_WITH_MAINTAINER_TEAM' .github/CODEOWNERS 2>/dev/null; then
+            echo "ERROR: CODEOWNERS still has @REPLACE_WITH_MAINTAINER_TEAM."
+            echo "Referee protection is NOT active. Replace it with a real GitHub user/team."
+            exit 1
+          fi
+      - name: Detect protected-path changes
+        id: detect
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            | grep -E '^(gates/|\.github/|config/|docs/设计决议记录\.md)' || true)
+          if [ -n "$CHANGED" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            printf 'Protected paths changed:\n%s\n' "$CHANGED"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Require gate-approved label
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          case "$LABELS" in
+            *gate-approved*) echo "gate-approved present: OK" ;;
+            *) echo "ERROR: protected path changed without 'gate-approved' label"; exit 1 ;;
+          esac
+
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Informational only: structure report, never the merge verdict.
+      - name: Contract coverage (informational)
+        run: python gates/check.py --coverage
+
+      # The real verdict: execute every test; a previously-green test going red
+      # denies the PR. Red phase may exist, but may never regress.
+      - name: Baseline ratchet (blocking)
+        run: python gates/check.py --baseline
+
+      # I6 is legitimately pending until P5 lands. Report it, never hide it;
+      # real regressions are already caught by the blocking ratchet above.
+      - name: Global invariants (informational)
+        run: python gates/check.py --invariants
+        continue-on-error: true

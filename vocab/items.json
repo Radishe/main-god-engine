@@ -1,0 +1,19 @@
+{
+  "$comment": "P4 vocabulary source. Entry shape per gates/stubs/vocabulary.json. No costs/effects are gameplay-tuned; structural values only.",
+  "entries": [
+    {
+      "id": "item/bandage",
+      "cost": 1,
+      "effect": "structural_placeholder",
+      "kind": "item",
+      "enabled_in": ["F1", "F2"]
+    },
+    {
+      "id": "item/ration",
+      "cost": 1,
+      "effect": "structural_placeholder",
+      "kind": "item",
+      "enabled_in": ["F2"]
+    }
+  ]
+}

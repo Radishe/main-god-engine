@@ -1,0 +1,25 @@
+{
+  "$comment": "Shared loader contract stub. D15 boundary values are placeholders, not decisions.",
+  "version": 1,
+  "axis_registration": {
+    "engine_semantics": "agnostic",
+    "forbidden_in_engine_core": "any concrete axis name literal",
+    "owner_of_names": "instance",
+    "owner_of_storage_and_bounds": "maingod"
+  },
+  "snapshot": {
+    "on_load": "freeze_ledger_copy",
+    "mutable_during_instance": false
+  },
+  "render_profile": {
+    "field": "render_profile",
+    "values": ["3d", "2d_flat", "graffiti"],
+    "affects_settlement": false
+  },
+  "code_channel": {
+    "boundary": "json_primary_dll_optin",
+    "source": "D15",
+    "forbidden_imports": "gates/stubs/forbidden_imports.json"
+  },
+  "ownership": "P3"
+}

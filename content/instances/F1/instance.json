@@ -1,0 +1,16 @@
+{
+  "$comment": "P7 F1 combat instance. Pure declaration (D15), no executable code, no credits/reward直通字段. Axes belong to the instance; engine stays axis-agnostic.",
+  "instance_id": "F1",
+  "instance_type": "combat",
+  "axes": {"hp": 100, "atk": 12, "def": 8},
+  "events": [
+    {"tick": 1, "kind": "hit", "axis": "hp", "delta": -7, "label": "ambush"}
+  ],
+  "render_profile": "3d",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "$comment": "Structural evidence for the engine to recompute under D12. NOT a payout. Scoring chain is unratified (D18), so no payout is derived yet.",
+    "volume": 10,
+    "completion_basis": "structural"
+  }
+}

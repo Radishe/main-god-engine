@@ -1,0 +1,18 @@
+{
+  "$comment": "C15 skeleton, C25-style. Single structured source of truth. SETTLED parts asserted by c15-01; UNRATIFIED parts are explicitly marked and must NOT be smuggled into the engine. No concrete tax/notary values are invented.",
+  "source": "03 §5",
+  "status": "PARTIALLY_RATIFIED",
+  "ratified": {
+    "enum": ["peaceful", "raid", "contract"],
+    "affects_settlement": true,
+    "manifest_field": "scene_tag",
+    "unknown_tag_rejected": true,
+    "declared_by": "instance_author"
+  },
+  "unratified": {
+    "$comment": "The concrete公证/税率 rule PER TAG is not decided. Keys here are placeholders that implementations must NOT act on until ratified.",
+    "per_tag_rules": "UNRATIFIED",
+    "reason": "素材仅有标签名称与『规则不同』的共同性质，无逐标签规则内容（03 §5 / 素材缺口表）"
+  },
+  "note": "examples for readability only — not data contract"
+}

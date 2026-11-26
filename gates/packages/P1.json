@@ -1,0 +1,53 @@
+{
+  "package": "P1",
+  "title": "主神状态机 / settle() / 账本 / 惩罚结算",
+  "version": 2,
+  "decision_log": "2026-11-12 拍板：C05 主神唯一账本归 P1，与 C07/C08 同组；coverage.json 已同步。",
+  "readonly": [
+    "gates/stubs/settlement.json",
+    "gates/stubs/notary.json",
+    "gates/stubs/fake_settle.py",
+    "config/paths.json",
+    "config/settlement.json"
+  ],
+  "writable": ["src/core/", "tests/p1/", "config/p1/"],
+  "contracts": ["C01", "C05", "C07", "C08", "C11", "C19", "C20", "C21", "C23", "C25"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p1/*)",
+  "config_namespace": "config/p1/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [
+    {"package": "P2", "needs": "结算清单字段校验"},
+    {"package": "P3", "needs": "副本加载与快照"},
+    {"package": "P4", "needs": "vocab ID 解析（包级可由 fake_notary 替身承担）"}
+  ],
+  "tests": [
+    {"id": "S1-G2-01", "spec_ref": "00 §4 S1-G2-01 / gates/tests/s1-g2-01.py", "assert": "恶意副本执行后进程不崩溃、账本哈希不变、日志含 rejected_direct_write"},
+    {"id": "S1-G2-02", "spec_ref": "00 §4 S1-G2-02", "assert": "提交 F4 后兑换点 = 前值 + credit_delta，其余字段深度相等"},
+    {"id": "S1-G2-04", "spec_ref": "00 §4 S1-G2-04", "assert": "snapshot.json 与加载前 ledger.json 深度相等"},
+    {"id": "C11-01", "spec_ref": "00 §12.4 / gates/tests/c11-01.py", "assert": "副本只申报 failure 事件，扣分只能由主神按 config/p1/penalty.json 执行"}
+  ],
+  "shared_tests": [
+    {"id": "C30-01", "role": "participant", "final_owner": "PX"},
+    {"id": "X04-01", "role": "participant", "final_owner": "PX"}
+  ],
+  "global_invariants": ["I1", "I2", "I6", "I7", "I8"],
+  "blocked_by": [
+    {"decision": "D14", "unblock_when": "docs/设计决议记录.md", "status_check": "contains:## D14", "effect": "惩罚体系设计目的决定 C11 / C21 / C25 的语义"},
+    {"decision": "A7", "unblock_when": "config/states.json", "status_check": "file_exists", "effect": "死亡流程派生状态配置落本包命名空间"}
+  ],
+  "downstream_dependents": ["P3", "P4", "P7"],
+  "consumers": [
+    {"package": "P4", "needs": "settle() 落账后的账本字段集"}
+  ],
+  "definition_of_done": [
+    "本包 4 条验收测试 PASS",
+    "I1/I2/I6/I7/I8 全局不变量仍绿",
+    "X03-01 配置变更后 S1 不变量回归通过",
+    "X04-01 集成门禁通过",
+    "evidence/p1/mutation.log 存在"
+  ],
+  "note": "C05 归 P1；config/p1/* 由本包写，共享 config 仍只读。与 P4 分片不共享任何可写路径。"
+}

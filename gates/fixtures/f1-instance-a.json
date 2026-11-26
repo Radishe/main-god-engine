@@ -1,0 +1,8 @@
+{
+  "$comment": "F1 combat instance. Axes hp/atk/def; one event changes hp; submits F4.",
+  "instance_id": "F1",
+  "axes": {"hp": 100, "atk": 12, "def": 8},
+  "events": [{"tick": 1, "axis": "hp", "delta": -7}],
+  "render_profile": "3d",
+  "asset_ids": []
+}

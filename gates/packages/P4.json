@@ -1,0 +1,55 @@
+{
+  "package": "P4",
+  "title": "产物公证 / 主神词汇表 / 跨副本持久化",
+  "version": 2,
+  "decision_log": "2026-11-12 拍板：C10 入场公证三件事归 P3 加载器；本包不再声明该契约，C10-01 转为参与项。",
+  "readonly": [
+    "gates/stubs/settlement.json",
+    "gates/stubs/notary.json",
+    "gates/stubs/vocabulary.json",
+    "gates/stubs/fake_settle.py",
+    "gates/stubs/fake_notary.py",
+    "config/paths.json",
+    "config/settlement.json"
+  ],
+  "writable": ["src/notary/", "vocab/", "tests/p4/", "config/p4/"],
+  "contracts": ["C09", "C13", "C14"],
+  "owner_disputes": [],
+  "shard_owner": "maintainer",
+  "agent_can_edit_shard": false,
+  "config_owner": "package (config/p4/*)",
+  "config_namespace": "config/p4/",
+  "config_access": "shared readonly + own namespace writable",
+  "runtime_depends_on": [
+    {"package": "P1", "needs": "settle() 真实实现（仅集成期 X04 需要；包级自检由 fake_settle 承担）"},
+    {"package": "P2", "needs": "结算清单校验器"}
+  ],
+  "tests": [
+    {"id": "C09-01", "spec_ref": "00 §12.2 / gates/tests/c09-01.py", "assert": "未公证 ID 的清单被 settle 拒绝，账本 SHA-256 不变，日志含 rejected_unnotarized"},
+    {"id": "C13-01", "spec_ref": "00 §12.2 / gates/tests/c13-01.py", "assert": "A 落账的能力/物品出现在 B 快照，按 vocab enabled_in 生效或显式失效"},
+    {"id": "C14-01", "spec_ref": "00 §12.2 / gates/tests/c14-01.py", "assert": "词汇表条目含 id/cost/effect/kind，id 唯一，清单引用必须命中"}
+  ],
+  "shared_tests": [
+    {"id": "C10-01", "role": "participant", "final_owner": "P3", "note": "入场三件事归加载器，P4 只提供公证接口"},
+    {"id": "C30-01", "role": "participant", "final_owner": "PX", "note": "G1 黄金链路，单包不得判定 PASS"},
+    {"id": "X02-01", "role": "participant", "final_owner": "PX", "note": "桩一致性跨 P2/P3/P4"}
+  ],
+  "global_invariants": ["I1", "I4", "I5", "I8"],
+  "blocked_by": [
+    {"decision": "D15", "unblock_when": "docs/设计决议记录.md", "status_check": "contains:## D15", "effect": "代码通道边界影响公证接口形态"},
+    {"decision": "A7", "unblock_when": "config/states.json", "status_check": "file_exists", "effect": "死亡流程派生的状态配置由 P1 在其命名空间落地"}
+  ],
+  "downstream_dependents": ["P3", "P7"],
+  "consumers": [
+    {"package": "P1", "needs": "vocab ID 解析与 enabled_in 判定"},
+    {"package": "P3", "needs": "产物公证接口"}
+  ],
+  "definition_of_done": [
+    "本包 3 条验收测试 PASS（包级可用 fake_settle 自检）",
+    "I1/I4/I5/I8 全局不变量在该包提交后仍绿",
+    "X02-01 桩一致性通过（由 PX 终裁）",
+    "X04-01 集成门禁用真实 settle() 复验通过",
+    "evidence/p4/mutation.log 存在且记录由绿转红"
+  ],
+  "note": "包级自检用 fake_settle / fake_notary，不等 P1；真实实现的正确性由 PX 集成门禁负责，两者不互相替代。"
+}

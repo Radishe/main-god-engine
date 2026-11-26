@@ -1,0 +1,25 @@
+{
+  "$comment": "D21 ratified tier scale. Maintainer-owned. Shared by instance tier and player tier (single ruler). Closed form: coefficient(n)=2^(n-1), band_low(n)=1000*2^(n-1), so band_low/coefficient == 1000 constant.",
+  "source": "D21",
+  "status": "ACTIVE",
+  "owner": "shared_by_instance_and_player",
+  "growth_model": "doubling",
+  "scale_owner": "shared_by_instance_and_player",
+  "novice": {"tier": 0, "coefficient": 0.5},
+  "base_low": 1000,
+  "growth": 2,
+  "tiers": [
+    {"tier": 1, "coefficient": 1.0, "band_low": 1000,   "band_high": 1999},
+    {"tier": 2, "coefficient": 2.0, "band_low": 2000,   "band_high": 3999},
+    {"tier": 3, "coefficient": 4.0, "band_low": 4000,   "band_high": 7999},
+    {"tier": 4, "coefficient": 8.0, "band_low": 8000,   "band_high": 15999},
+    {"tier": 5, "coefficient": 16.0, "band_low": 16000, "band_high": 31999},
+    {"tier": 6, "coefficient": 32.0, "band_low": 32000, "band_high": 63999},
+    {"tier": 7, "coefficient": 64.0, "band_low": 64000, "band_high": 127999},
+    {"tier": 8, "coefficient": 128.0, "band_low": 128000, "band_high": 255999},
+    {"tier": 9, "coefficient": 256.0, "band_low": 256000, "band_high": 511999},
+    {"tier": 10, "coefficient": 512.0, "band_low": 512000, "band_high": 1023999}
+  ],
+  "closure_check": "band_low(10)/coefficient(10) = 512000/512 = 1000 = base_low",
+  "note": "Tier coefficient feeds D20 payout: credits = volume × tier_coefficient × grade_coefficient × exchange_rate. Default tier for unlabeled manifests is 1 (coefficient 1.0)."
+}

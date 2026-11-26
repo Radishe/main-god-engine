@@ -1,0 +1,8 @@
+{
+  "$comment": "F2 survival instance. Axes health/hunger; one event changes hunger; submits F4.",
+  "instance_id": "F2",
+  "axes": {"health": 100, "hunger": 60},
+  "events": [{"tick": 1, "axis": "hunger", "delta": -5}],
+  "render_profile": "2d_flat",
+  "asset_ids": []
+}
