@@ -56,6 +56,11 @@ jobs:
       - name: Contract coverage (informational)
         run: python gates/check.py --coverage
 
+      # Manifest validation CLI (S4-G1-03): blocking. It is expected to be red
+      # until P2 lands tools/validate; a red CLI must fail the PR.
+      - name: Settlement manifest validation (blocking)
+        run: python tools/validate.py
+
       # The real verdict: execute every test; a previously-green test going red
       # denies the PR. Red phase may exist, but may never regress.
       - name: Baseline ratchet (blocking)

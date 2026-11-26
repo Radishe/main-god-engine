@@ -14,13 +14,17 @@
   "runtime_depends_on": [{"package": "P1", "needs": "账本字段集以生成校验规则"}],
   "tests": [
     {"id": "S4-G1-01", "spec_ref": "00 §7 S4-G1-01", "assert": "F5-1~F5-6 六个非法变体全部被拒且错误含字段名与位置"},
-    {"id": "S4-G1-03", "spec_ref": "00 §7 S4-G1-03", "assert": "CI 作业执行 validation CLI，失败时 PR 检查非通过"},
     {"id": "S3-G5-01", "spec_ref": "00 §6 S3-G5-01", "assert": "虚报 total_volume 被拒且错误含上限值"}
   ],
-  "shared_tests": [{"id": "X02-01", "role": "participant", "final_owner": "PX"}],
+  "shared_tests": [
+    {"id": "X02-01", "role": "participant", "final_owner": "PX"},
+    {"id": "S4-G1-03", "role": "maintainer-owned", "final_owner": "PX",
+     "assert": "CI 执行 validation CLI 且为 blocking、日志路径已登记",
+     "reason": "验收对象是 .github/workflows（受保护路径，不在 P2 writable）；P2 只交付 tools/validate.py，CI 接线由 maintainer 持有"}
+  ],
   "global_invariants": ["I4", "I7"],
   "blocked_by": [{"decision": "Q1", "unblock_when": "config/paths.json", "status_check": "file_exists", "effect": "技术栈决定 validation CLI 的 runner"}],
   "downstream_dependents": ["P1", "P3", "P7"],
-  "definition_of_done": ["本包 3 条验收测试 PASS", "X02-01 桩一致性通过", "六非法变体回归绿"],
-  "note": "C05 已按拍板归 P1；本包专注 Schema 与 CLI。"
+  "definition_of_done": ["本包 2 条 own 验收测试 PASS", "X02-01 桩一致性通过", "六非法变体回归绿"],
+  "note": "C05 已按拍板归 P1；本包专注 Schema 与 CLI。S4-G1-03 的 CI 接线归 PX 维护者（其验收对象 .github/workflows 不在本包 writable），避免领取后死锁。"
 }

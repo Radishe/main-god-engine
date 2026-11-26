@@ -1,0 +1,3 @@
+cli=tools/validate.py
+step=blocking
+log_registered=evidence/s4/g1-03.txt

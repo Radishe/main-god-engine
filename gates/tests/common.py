@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-EXIT = {"PASS": 0, "FAIL": 1, "PENDING": 2}
+EXIT = {"PASS": 0, "FAIL": 1, "PENDING": 2, "DEFERRED": 3}
 
 
 def gate_status(test_id):

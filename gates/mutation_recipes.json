@@ -1,5 +1,5 @@
 {
-  "$comment": "Mutation recipes. Maintainer-owned. X05-01 replays each recipe on a TEMPORARY copy and verifies the guard test flips green->red; logs are informational, never trusted as evidence.",
+  "$comment": "Mutation recipes. Maintainer-owned. X05-01 replays each recipe on a TEMPORARY copy and verifies the guard test flips green->red; logs are informational, never trusted as evidence. Semantic anchors (regex) tolerate behaviour-preserving refactors; literal original/mutant kept as fallback.",
   "version": 1,
   "recipes": [
     {
@@ -7,35 +7,60 @@
       "guard": "s1-g2-02",
       "target": "src/core/ledger.py",
       "original": "next_ledger[\"credits\"] = next_ledger.get(\"credits\", 0) + effective_delta",
-      "mutant": "next_ledger[\"credits\"] = next_ledger.get(\"credits\", 0) + effective_delta + 1"
+      "mutant": "next_ledger[\"credits\"] = next_ledger.get(\"credits\", 0) + effective_delta + 1",
+      "semantic": {
+        "pattern": "next_ledger\\[\"credits\"\\]\\s*=\\s*next_ledger\\.get\\(\\s*\"credits\"\\s*,\\s*0\\s*\\)\\s*\\+\\s*(?:int\\()?effective_delta\\)?",
+        "replacement": "next_ledger[\"credits\"] = next_ledger.get(\"credits\", 0) + effective_delta + 1",
+        "note": "anchors the credit write; tolerates int() wrapper / whitespace"
+      }
     },
     {
       "id": "engine_honours_instance_delta",
       "guard": "c11-01",
       "target": "src/core/ledger.py",
       "original": "        else:\n            effective_delta = engine_completed_delta(manifest, volume=task_volume)",
-      "mutant": "        else:\n            effective_delta = manifest[\"credit_delta\"]"
+      "mutant": "        else:\n            effective_delta = manifest[\"credit_delta\"]",
+      "semantic": {
+        "pattern": "effective_delta\\s*=\\s*engine_completed_delta\\(manifest,\\s*volume=task_volume\\)",
+        "replacement": "effective_delta = manifest[\"credit_delta\"]",
+        "note": "anchors the engine-computed failure/aborted branch"
+      }
     },
     {
       "id": "double_report_not_rejected",
       "guard": "x02-01",
       "target": "src/core/settlement.py",
       "original": "    if \"claims\" in manifest and manifest.get(\"credit_delta\", 0) != 0:\n        raise Rejected(\"rejected_double_report:claims+credit_delta\")",
-      "mutant": "    if False and \"claims\" in manifest and manifest.get(\"credit_delta\", 0) != 0:\n        raise Rejected(\"rejected_double_report:claims+credit_delta\")"
+      "mutant": "    if False and \"claims\" in manifest and manifest.get(\"credit_delta\", 0) != 0:\n        raise Rejected(\"rejected_double_report:claims+credit_delta\")",
+      "semantic": {
+        "pattern": "if\\s+\"claims\"\\s+in\\s+manifest\\s+and\\s+manifest\\.get\\(\\s*\"credit_delta\"\\s*,\\s*0\\s*\\)\\s*!=\\s*0\\s*:",
+        "replacement": "if False and \"claims\" in manifest and manifest.get(\"credit_delta\", 0) != 0:",
+        "note": "anchors the double-report guard"
+      }
     },
     {
       "id": "nested_list_mutable",
       "guard": "s1-g2-01",
       "target": "src/core/ledger.py",
       "original": "        return tuple(_deep_freeze(v) for v in value)",
-      "mutant": "        return [_deep_freeze(v) for v in value]"
+      "mutant": "        return [_deep_freeze(v) for v in value]",
+      "semantic": {
+        "pattern": "return\\s+tuple\\(_deep_freeze\\(v\\)\\s+for\\s+v\\s+in\\s+value\\)",
+        "replacement": "return [_deep_freeze(v) for v in value]",
+        "note": "anchors deep-freeze of list values"
+      }
     },
     {
       "id": "settle_hook_missing",
       "guard": "c30-01",
       "target": "src/core/ledger.py",
       "original": "        self._hooks.committed(manifest[\"instance_id\"], effective_delta)",
-      "mutant": "        pass  # MUTANT: no commit trace"
+      "mutant": "        pass  # MUTANT: no commit trace",
+      "semantic": {
+        "pattern": "self\\._hooks\\.committed\\(manifest\\[\"instance_id\"\\]\\s*,\\s*effective_delta\\)",
+        "replacement": "pass  # MUTANT: no commit trace",
+        "note": "anchors the commit hook call"
+      }
     }
   ]
 }

@@ -10,6 +10,7 @@ A package with no recipes is DEFERRED (never silently PASS).
 """
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -41,6 +42,35 @@ def _run_guard(test_path, cwd):
     return status, lines[0]
 
 
+def _apply_mutation(original, recipe):
+    """Return mutated source, or raise ValueError('stale') if the anchor is gone.
+
+    Two anchor modes:
+      * semantic (preferred): a regex `pattern` + `replacement`. Tolerates
+        behaviour-preserving refactors (whitespace, int() wrappers, variable
+        renames within the pattern's capture) while still breaking if the
+        targeted behaviour is removed. This is what lets P1 refactor src/core
+        without tripping the global ratchet.
+      * literal (legacy fallback): exact `original`/`mutant` substring swap.
+    """
+    sem = recipe.get("semantic")
+    if sem:
+        pattern, replacement = sem["pattern"], sem["replacement"]
+        if not re.search(pattern, original):
+            raise ValueError("stale (semantic anchor not found)")
+        mutated, n = re.subn(pattern, replacement, original, count=1)
+        if n != 1 or mutated == original:
+            raise ValueError("stale (semantic mutation did not change source)")
+        return mutated
+    # legacy literal mode
+    if recipe["original"] not in original:
+        raise ValueError("stale (original snippet not found)")
+    mutated = original.replace(recipe["original"], recipe["mutant"], 1)
+    if mutated == original:
+        raise ValueError("stale (mutant identical to original)")
+    return mutated
+
+
 def replay(recipe, sandbox):
     """Apply one recipe on the temp copy; return (ok, detail)."""
     target = sandbox / recipe["target"]
@@ -48,15 +78,14 @@ def replay(recipe, sandbox):
     if not target.is_file() or not guard.is_file():
         return False, "target or guard missing in sandbox"
     original = target.read_text(encoding="utf-8")
-    if recipe["original"] not in original:
-        return False, "recipe original snippet not found (stale recipe)"
-    if recipe["original"] == recipe["mutant"]:
-        return False, "mutant identical to original"
+    try:
+        mutated = _apply_mutation(original, recipe)
+    except ValueError as exc:
+        return False, str(exc)
 
     base, base_line = _run_guard(guard, sandbox)
     try:
-        target.write_text(original.replace(recipe["original"], recipe["mutant"], 1),
-                          encoding="utf-8")
+        target.write_text(mutated, encoding="utf-8")
         mutant, mut_line = _run_guard(guard, sandbox)
     finally:
         target.write_text(original, encoding="utf-8")
