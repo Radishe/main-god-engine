@@ -10,3 +10,5 @@
   "enum_source": "gates/stubs/settlement.json",
   "note": "按 D17：呈现层与 Unity 选型推迟到最小结算闭环跑通后；原型阶段 render_profile 仅作元数据占位，不做真实管线切换。"
 }
+
+<!-- protection probe: should be blocked without gate-approved label -->
