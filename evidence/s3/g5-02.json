@@ -1,5 +1,8 @@
 {
-  "D1_volume": 12,
+  "volumes": {
+    "D1": 12,
+    "D2": 18
+  },
   "ceiling": "UNRATIFIED",
-  "D2": "D2 not produced (human_in_loop); not fabricated"
+  "D2": "D2 volume=18 structurally valid"
 }

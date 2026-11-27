@@ -33,15 +33,25 @@ def main():
         if v.get("unratified", {}).get("max_total_volume") != "UNRATIFIED":
             return emit(ID, "FAIL", "volume ceiling no longer UNRATIFIED")
 
+    # D2 now exists — validate its volume with the same rule, not just note presence
     d2 = ROOT / "content" / "instances" / "D2" / "instance.json"
-    note = "D2 present" if d2.is_file() else "D2 not produced (human_in_loop); not fabricated"
+    volumes = {"D1": volume}
+    if d2.is_file():
+        d2data = json.loads(d2.read_text(encoding="utf-8"))
+        v2 = d2data.get("settlement_evidence", {}).get("volume")
+        if not isinstance(v2, int) or isinstance(v2, bool) or v2 <= 0:
+            return emit(ID, "FAIL", "D2 volume invalid: %r" % v2)
+        volumes["D2"] = v2
+        note = "D2 volume=%d structurally valid" % v2
+    else:
+        note = "D2 not produced (human_in_loop); not fabricated"
 
     ev = ROOT / "evidence" / "s3"
     ev.mkdir(parents=True, exist_ok=True)
     (ev / "g5-02.json").write_text(json.dumps(
-        {"D1_volume": volume, "ceiling": "UNRATIFIED", "D2": note},
+        {"volumes": volumes, "ceiling": "UNRATIFIED", "D2": note},
         ensure_ascii=False, indent=2), encoding="utf-8")
-    return emit(ID, "PASS", "D1 volume=%d structurally valid; %s" % (volume, note))
+    return emit(ID, "PASS", "volumes=%s structurally valid; %s" % (volumes, note))
 
 
 if __name__ == "__main__":

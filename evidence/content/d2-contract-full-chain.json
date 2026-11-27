@@ -1,0 +1,19 @@
+{
+  "instance": "D2",
+  "scene_tag": "contract",
+  "axes": [
+    "obligation",
+    "standing",
+    "trust"
+  ],
+  "declared_volume": 18,
+  "payout": 36,
+  "commits": [
+    [
+      "D2",
+      36
+    ]
+  ],
+  "cli": "valid",
+  "known_gap": "scene_tag is declarative metadata; no execution layer reads it (C15 interaction rules settled in config, tax rates UNRATIFIED)"
+}

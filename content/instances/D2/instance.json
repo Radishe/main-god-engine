@@ -1,0 +1,20 @@
+{
+  "instance_id": "D2",
+  "instance_type": "contract_negotiation",
+  "scene_tag": "contract",
+  "axes": {"trust": 40, "standing": 30, "obligation": 5},
+  "events": [
+    {"tick": 1, "kind": "fulfil", "axis": "obligation", "delta": -5, "label": "deliver_goods"}
+  ],
+  "contract": {
+    "counterparty": "R-0002",
+    "terms": ["deliver_goods", "no_pvp"],
+    "protected_by": "declared_contract"
+  },
+  "render_profile": "metadata_placeholder",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "volume": 18,
+    "completion_basis": "contract_fulfilled"
+  }
+}
