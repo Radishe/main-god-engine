@@ -3,9 +3,12 @@
   "source": "D16",
   "death_flow": "exit_and_settle",
   "counts_toward_erasure": true,
+  "erasure_count_scope": "global_cumulative",
+  "erasure_count_threshold": 3,
+  "erasure_count_reset_on_tier_change": false,
   "revive": false,
   "lethal_requires_declaration": true,
   "erasure_state": "registered",
   "non_erasure_state": "distinguishable",
-  "note": "01 §4.1 的「死亡是局部状态」不再作为死亡流程依据；07 §5 低阶保护改为退出并按未完成结算。"
+  "note": "01 §4.1 的「死亡是局部状态」不再作为死亡流程依据；07 §5 低阶保护改为退出并按未完成结算。T2（发起人 2026-11-27 拍板）：抹杀计数全局累计、固定 3 次、不按阶位重置（推翻旧文档 3/2/1 按阶重置方案）。C25 纪念标记字段仍未拍，不在本配置内。"
 }

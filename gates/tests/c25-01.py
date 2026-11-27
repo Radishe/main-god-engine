@@ -29,6 +29,9 @@ def main():
     checks = {
         "death_flow": "exit_and_settle",
         "counts_toward_erasure": True,
+        "erasure_count_scope": "global_cumulative",
+        "erasure_count_threshold": 3,
+        "erasure_count_reset_on_tier_change": False,
         "revive": False,
         "lethal_requires_declaration": True,
         "erasure_state": "registered",
