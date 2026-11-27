@@ -45,7 +45,7 @@
       {"gate": "G3", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["C15-01", "C16-01"], "note": "D13.22 骨架已落地：config/scenes.json 与 settlement_units.json 的已定部分 ratified、未拍部分显式 UNRATIFIED 且拒绝偷渡，断言验的是结构契约不变量，故从 config_driven 改 invariant 并激活"}
     ],
     "si": [
-      {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["X01-01", "X02-01", "X03-01", "X04-01", "X05-01"], "note": "cross-stage handoff + package integration suite; no single stage owns these"},
+      {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["X01-01", "X02-01", "X03-01", "X04-01", "X05-01", "X06-01"], "note": "cross-stage handoff + package integration suite; X06-01 = D1 full-chain content-production proof"},
       {"gate": "G2", "layer": "invariant", "status": "active", "depends_on": ["config/tiers.json"], "tests": ["I9-01"], "note": "D21 tier scale closure; global config invariant"}
     ]
   }

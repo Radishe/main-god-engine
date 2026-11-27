@@ -1,0 +1,14 @@
+{
+  "instance": "D1",
+  "declared_volume": 12,
+  "payout": 24,
+  "commits": [
+    [
+      "D1",
+      24
+    ]
+  ],
+  "cli": "valid",
+  "ledger_sha_before": "51bae8da145aab918ecde10f732b795cefdf8d94a0ee0c511ede21b62c3264ed",
+  "ledger_sha_after": "70012ada975a52e2bcc7f0e655577571c8f0b606289b52f1525958a48f671ae6"
+}
