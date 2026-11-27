@@ -53,8 +53,11 @@ jobs:
           python-version: '3.12'
 
       # Informational only: structure report, never the merge verdict.
+      # Must not block a PR — coverage being red is a design signal, not a
+      # regression verdict (the baseline ratchet below is the real gate).
       - name: Contract coverage (informational)
         run: python gates/check.py --coverage
+        continue-on-error: true
 
       # Manifest validation CLI (S4-G1-03): blocking. It is expected to be red
       # until P2 lands tools/validate; a red CLI must fail the PR.
