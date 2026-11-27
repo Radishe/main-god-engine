@@ -27,7 +27,7 @@
 以下仍为 UNRATIFIED，本文**不**给出具体规则或数值：
 
 - 申诉通道与处理时限（08 §5）；L1 审核人数门槛、L0 维护者人数、审核者选拔机制（08 §5）。
-- 场景规则标签逐标签的具体公证 / 税率规则（C15，`config/scenes.json` 的 `unratified.per_tag_rules`）。
+- 场景规则标签的公证 / 税率**数值**（C15：`config/scenes.json` 的 `tax_or_notary_rate.value = UNRATIFIED`；逐标签交互规则 `per_tag_rules` 已 RATIFIED，但那不是数值）。
 - 扭曲节点作为结算单元的边界（C16）与抹杀 / 非抹杀态的完整账本语义。
 
 上述事项须由拍板后写入对应结构化配置与决议记录，不得由本契约或实现代填。

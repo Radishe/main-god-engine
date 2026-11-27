@@ -1,0 +1,15 @@
+{
+  "$comment": "D3 cold-start exploration instance — produced by an isolated 'external author' using ONLY public docs (see docs/_reports/冷启动验证-外部作者-2026-11-27.md). Axes oxygen/temperature, both integers. NOTE: volume=12 and claim values were copied from D1 because public docs give no numeric derivation — this instance proves the entry workflow is usable, NOT that its gameplay numbers are semantically correct. Pure data declaration (D15), no engine logic.",
+  "instance_id": "D3",
+  "instance_type": "exploration",
+  "axes": {"oxygen": 80, "temperature": 20},
+  "events": [
+    {"tick": 1, "kind": "consume", "axis": "oxygen", "delta": -10, "label": "deep_cave_descent"}
+  ],
+  "render_profile": "graffiti",
+  "asset_ids": [],
+  "settlement_evidence": {
+    "volume": 12,
+    "completion_basis": "exploration_survived"
+  }
+}

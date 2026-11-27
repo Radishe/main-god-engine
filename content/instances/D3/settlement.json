@@ -1,0 +1,10 @@
+{
+  "instance_id": "D3",
+  "reincarnator_id": "R-0001",
+  "completion": "success",
+  "credit_delta": 0,
+  "ability_ids": [],
+  "item_ids": [],
+  "idempotency_key": "D3-EXPLORE-001",
+  "claims": "{\"schema_version\":1,\"score\":12,\"volume\":12,\"main_share\":1.0,\"side_share\":0.0,\"main_failed\":false,\"event_flags\":[]}"
+}

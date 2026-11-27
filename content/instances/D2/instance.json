@@ -1,4 +1,5 @@
 {
+  "$comment": "D2 contract-scene instance. render_profile is D17 metadata placeholder only — no real visual pipeline switch; value must be one of the loader stub enum (3d/2d_flat/graffiti).",
   "instance_id": "D2",
   "instance_type": "contract_negotiation",
   "scene_tag": "contract",
@@ -11,7 +12,7 @@
     "terms": ["deliver_goods", "no_pvp"],
     "protected_by": "declared_contract"
   },
-  "render_profile": "metadata_placeholder",
+  "render_profile": "graffiti",
   "asset_ids": [],
   "settlement_evidence": {
     "volume": 18,

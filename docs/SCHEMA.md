@@ -6,10 +6,11 @@
 
 D15 定稿：声明式 JSON 是一等公民。清单是**数据声明**，不是可执行逻辑：
 
-- 不得含 `settle()`、账本写入、惩罚逻辑等引擎语义；静态扫描令牌见 `gates/stubs/settlement.json` 的约定与 C01-01。
-- 不得导入引擎内部命名空间；唯一令牌来源 `gates/stubs/forbidden_imports.json`，命中即 `rejected_import`。
-- 属性轴按 01 §2 的概念声明取值范围；场景标签字段名为 `scene_tag`，见下文「场景规则标签」。
+- 不得含 `settle()`、账本写入、惩罚逻辑等引擎语义；**引擎语义扫描令牌的唯一真源是 `gates/tests/c01-01.py` 的 `FORBIDDEN_TOKENS`**（`settle(`、`rejected_direct_write`、`credit_delta =`、`penalty(` 等）。
+- 不得导入引擎内部命名空间；**令牌唯一真源 `gates/stubs/forbidden_imports.json`**（`from src.core`、`import src.core`、`from core.`、`import ledger`、`from src.notary`、`import src.notary`），命中即 `rejected_import`。
+- 属性轴按 01 §2 的概念声明取值范围（**设计约定；`tools/validate.py` 当前不机检轴范围**，见 `config/checklist.json` 第 2 项状态）；场景标签字段名为 `scene_tag`，见下文「场景规则标签」。
 - 带自有逻辑的 DLL 不是清单的一部分，走 `config/contribution.json` 的独立高级通道。
+- `$comment` 只可放声明（`instance.json`）；结算清单字段集冻结，放 `$comment` 会被拒。
 
 ## 结算清单与冻结字段
 
@@ -18,6 +19,8 @@ D15 定稿：声明式 JSON 是一等公民。清单是**数据声明**，不是
 - `settlement_manifest.required`：实例 ID、轮回者 ID、完成态、`credit_delta`、能力 ID 列表、物品 ID 列表。
 - `optional`：`idempotency_key`、`claims`。
 - `frozen: true`，并带 `field_set_digest`。不变量 I4 禁止任何包扩展字段集；扩展须同步更新哈希并经维护者独立审批。
+- 逐字段类型与约束见作者速查 [`../content/instances/README.md`](../content/instances/README.md)。要点：`completion` 枚举 `success|failure|aborted`；`ability_ids`/`item_ids` 须命中公证词汇表且（能力）`enabled_in` 含本实例，重复即拒；`instance_id` 须命中已落盘 `content/instances/*/instance.json`（**先落声明再交清单**）。
+- 作者速查区分「CLI 会拒的」与「设计合规但 CLI 不查的」；通过 `tools/validate.py` 不等于语义合规。
 
 D18 硬约束 1：`claims` 与**非零** `credit_delta` 双字段共存即拒绝（`rejected_double_report`），防止双报刷币。冻结字段集保留 `credit_delta` 是结构兼容需要，不代表它仍是权威 payout 来源。
 
@@ -25,8 +28,9 @@ D18 硬约束 1：`claims` 与**非零** `credit_delta` 双字段共存即拒绝
 
 D18 把 `settle()` 从加法器升级为规则引擎：副本通过版本化 `claims` 申报结构化证据，引擎独立重算评分与定级。
 
-- `claims` 以 JSON 字符串编码；必需键：`schema_version`、`score`、`volume`、`main_share`、`side_share`、`main_failed`、`event_flags`。
-- 裸 `score` / `grade` / `credits` 不作为支付值：禁止键见 `gates/stubs/settlement.json` 的 `claims_schema.forbidden_bare_keys`；`score`/`volume` 只是供重算的证据。
+- `claims` 以 JSON **字符串**编码（不是对象）；必需键：`schema_version`、`score`、`volume`、`main_share`、`side_share`、`main_failed`、`event_flags`，类型见 `gates/stubs/settlement.json` 的 `claims_schema.types`（shares 为 number、main_failed 为 boolean、event_flags 为 array\<string>）。
+- 裸 `score` / `grade` / `credits` 不作为支付值：禁止键见 `gates/stubs/settlement.json` 的 `claims_schema.forbidden_bare_keys`（`grade`/`credits`/`payout`/`coefficient`）；`score`/`volume` 只是供重算的证据。
+- 类型/禁键由 CLI 校验；**份额加总 100% 与 main≥0.5 是设计规则，仅评分链 `src/core/scoring.py` 校验，CLI 不查**——作者须自行保证。
 - 引擎只认中性键，不得读具体属性轴字面量（I2 扫描）；`engine_must_not_read` 登记了禁止读取的轴名。
 - D20 定稿的链条：份额加总 100%、体量 = 理论最高分 = 达成率分母；达成率区间 S/A/B/C/D/E 与系数、汇率 1:1 以 `config/scoring.json` 为准；E 系数为 0.1，F 为独立失败态走 D14 简化惩罚，不接失败/抹杀计数。
 - D21 定稿：阶位系数 `2^(n-1)`、区间下限 `1000×2^(n-1)`，副本阶位与玩家阶位共用同一把尺；以 `config/tiers.json` 为准。
@@ -38,7 +42,9 @@ C15 已拍板的结构部分（见 `config/scenes.json` 的 `ratified`）：
 - 标签枚举：`peaceful` / `raid` / `contract`。
 - `affects_settlement: true`；清单字段名为 `scene_tag`；未知标签拒绝；由副本作者申报。
 
-逐标签的具体公证 / 税率规则仍为 **UNRATIFIED**（`config/scenes.json` 的 `unratified.per_tag_rules`）。本文与 Schema 都不得塞入任何具体税率数值——那属于未拍板规则，须由拍板后另行定稿。
+交互规则（PVP / 交易保护）已由 C15 拍板，见 `config/scenes.json` 的 `per_tag_rules`（`status: RATIFIED`）。**税率 / 公证费数值仍为 `UNRATIFIED`**（`config/scenes.json` 的 `tax_or_notary_rate.value`），本文与 Schema 都不得塞入任何具体税率——那属于未拍板规则，须另行定稿。
+
+> 实现现状：`scene_tag` 目前是**声明性元数据**——引擎不因标签产生收益或行为差异，执行层尚未读取它（缺口见 `docs/00-阶段与验收标准.md` §13.33 与 `evidence/content/d2-contract-full-chain.json`）。未知标签拒绝也未落到 CLI/loader 代码路径。作者申报标签不会改变结算结果，不得假设它会。
 
 ## 字段扩展与版本锁定
 

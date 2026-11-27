@@ -18,8 +18,8 @@
       "definition": {
         "object": "属性轴取值范围声明",
         "source_ref": "01 §2（概念已定义）/ 08 §2.1 表",
-        "judge": "machine",
-        "check": "声明式副本逐轴声明取值范围；由 tools/validate.py 按 Schema 机检"
+        "judge": "human",
+        "check": "声明式副本逐轴声明取值范围（整数值；具体范围由 01 §2 概念约定，素材未给全数值故不机检）。审核者人工核对；tools/validate.py 当前不校验轴范围——原『按 Schema 机检』为未完成承诺，2026-11-27 更正为 human，禁止据此误判自动通过。"
       }
     },
     {
