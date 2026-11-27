@@ -101,6 +101,12 @@ class Engine:
         self._ledger = copy.deepcopy(ledger)
         self._seen = set()
         self._hooks = hooks if hooks is not None else _NullHooks()
+        self.__peak_tier = 0  # C25 memorial: engine-owned, never from a manifest
+
+    @property
+    def peak_tier(self):
+        """C25 '曾到达 X 阶' — read-only memorial value (no setter)."""
+        return self.__peak_tier
 
     def ledger(self):
         """Return a deep-frozen view. Any write attempt raises Rejected."""
@@ -164,6 +170,10 @@ class Engine:
         next_ledger["credits"] = next_ledger.get("credits", 0) + effective_delta
         self._ledger = next_ledger
         self._hooks.committed(manifest["instance_id"], effective_delta)
+        # C25: record the highest tier the engine has settled. Not part of the
+        # ledger, not from the manifest, no setter — purely commemorative.
+        if tier > self.__peak_tier:
+            self.__peak_tier = tier
         return self.ledger()
 
 

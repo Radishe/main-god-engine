@@ -9,10 +9,31 @@
     "unknown_tag_rejected": true,
     "declared_by": "instance_author"
   },
-  "unratified": {
-    "$comment": "The concrete公证/税率 rule PER TAG is not decided. Keys here are placeholders that implementations must NOT act on until ratified.",
-    "per_tag_rules": "UNRATIFIED",
-    "reason": "素材仅有标签名称与『规则不同』的共同性质，无逐标签规则内容（03 §5 / 素材缺口表）"
+  "per_tag_rules": {
+    "status": "RATIFIED",
+    "source": "03 §5 明示的『能否 PVP / 交易是否受保护』",
+    "peaceful": {
+      "pvp_allowed": false,
+      "trade_protected": true,
+      "note": "和平场景：禁止 PVP，玩家间交易受公证保护"
+    },
+    "raid": {
+      "pvp_allowed": true,
+      "trade_protected": false,
+      "note": "掠夺场景：允许 PVP，交易不受保护"
+    },
+    "contract": {
+      "pvp_allowed": false,
+      "trade_protected": true,
+      "enforced_by": "declared_contract",
+      "note": "契约场景：禁止 PVP，受保护交易以副本声明的契约为限"
+    },
+    "$comment": "三个标签只规定交互行为差异（素材有据）；任何 per-tag 税率/公证费数值均未拍，不在此表。"
   },
-  "note": "examples for readability only — not data contract"
+  "tax_or_notary_rate": {
+    "status": "UNRATIFIED",
+    "value": "UNRATIFIED",
+    "reason": "素材零数值；差异化税率属发明，禁止写死。实施方不得据此表推导任何税率。"
+  },
+  "note": "发起人 2026-11-27 拍板 B：落地交互规则差异，税率差异不采纳（进入发明区）。"
 }

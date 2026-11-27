@@ -10,5 +10,20 @@
   "lethal_requires_declaration": true,
   "erasure_state": "registered",
   "non_erasure_state": "distinguishable",
-  "note": "01 §4.1 的「死亡是局部状态」不再作为死亡流程依据；07 §5 低阶保护改为退出并按未完成结算。T2（发起人 2026-11-27 拍板）：抹杀计数全局累计、固定 3 次、不按阶位重置（推翻旧文档 3/2/1 按阶重置方案）。C25 纪念标记字段仍未拍，不在本配置内。"
+  "memorial_marker": {
+    "status": "RATIFIED",
+    "field": "peak_tier",
+    "meaning": "曾到达 X 阶，纯纪念",
+    "source": "engine_recorded_only",
+    "write_via": "Engine.settle()",
+    "update_rule": "max(previous_peak, settled_tier)",
+    "external_assignment": "forbidden",
+    "display_only": true,
+    "affects_settlement": false,
+    "in_settlement_manifest": false,
+    "in_ledger_fields": false,
+    "decision": "发起人 2026-11-27 拍板 A 纯纪念：只写不读、不进结算；进结算与 D2 重复，不采纳",
+    "$comment": "单一真源 states.json。引擎记录的历史最高阶，外部不可赋值，不进结算清单白名单，不进账本字段集。封存原条件『经抹杀分支写入』按 D16 exit_and_settle 调整为『经 settle 按阶结算写入』。"
+  },
+  "note": "01 §4.1 的「死亡是局部状态」不再作为死亡流程依据；07 §5 低阶保护改为退出并按未完成结算。T2（发起人 2026-11-27 拍板）：抹杀计数全局累计、固定 3 次、不按阶位重置（推翻旧文档 3/2/1 按阶重置方案）。C25（发起人 2026-11-27 拍板 A）：peak_tier 纯纪念、引擎唯一来源、不进结算。"
 }

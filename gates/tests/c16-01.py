@@ -1,10 +1,12 @@
-"""C16-01: anomaly-zone as a legal settlement unit — SETTLED part (C25-style).
+"""C16-01: anomaly-zone settlement boundary (01 §扭曲节点 / 04 §5 / D15 / C16).
 
-SPEC (config/settlement_units.json is the single structured source):
-  - anomaly_zone is a legal unit; its manifest carries parent_instance_id;
-    it must go through settle(); no double posting; code channel is opt-in (D15).
-  - the exact boundary of the unit is NOT RATIFIED. This test asserts the
-    settled contract and rejects a smuggled concrete boundary before ratification.
+Unit contract: anomaly_zone is legal, manifest carries parent_instance_id,
+must go through settle(), no double posting, code channel opt-in.
+
+Boundary RATIFIED as structural constraints: a declarative zone is legal iff
+it satisfies the three structural requirements (NOT author declaration alone);
+human review applies only to the DLL code channel. An implementation that
+relaxes this to 'author declares = legal' is rejected.
 """
 import json
 import sys
@@ -35,11 +37,22 @@ def main():
     if drift:
         return emit(ID, "FAIL", "settlement_units.json ratified drift: " + "; ".join(drift))
 
-    unrat = data.get("unratified", {})
-    if unrat.get("boundary_rules") != "UNRATIFIED":
-        return emit(ID, "FAIL", "boundary_rules must remain UNRATIFIED")
+    b = data.get("boundary_rules", {})
+    if b.get("status") != "RATIFIED":
+        return emit(ID, "FAIL", "boundary_rules not RATIFIED")
+    dec = b.get("declarative_channel", {})
+    if dec.get("author_declaration_alone_sufficient") is not False:
+        return emit(ID, "FAIL", "author declaration alone accepted as boundary")
+    req = set(dec.get("requires", []))
+    want = {"must_go_through_settle", "parent_instance_id", "no_double_posting"}
+    if not want.issubset(req):
+        return emit(ID, "FAIL", "structural requirements missing: %s" % sorted(want - req))
+    dll = b.get("dll_channel", {})
+    if dll.get("requires_human_review") is not True:
+        return emit(ID, "FAIL", "DLL channel must require human review (D15)")
 
-    return emit(ID, "PASS", "settled unit contract OK; boundary left unratified (not invented)")
+    return emit(ID, "PASS", "boundary = 3 structural constraints (not author fiat); "
+                "human review only for DLL channel")
 
 
 if __name__ == "__main__":

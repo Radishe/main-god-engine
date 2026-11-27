@@ -1,11 +1,9 @@
-"""C15-01: scene-tag differential settlement — SETTLED part only (C25-style).
+"""C15-01: scene tags with ratified interaction rules (03 §5 / C15).
 
-SPEC (config/scenes.json is the single structured source of truth):
-  - three tag names, affects_settlement, manifest field scene_tag,
-    unknown tag rejected, declared by instance author — all SETTLED (03 §5).
-  - the concrete notary/tax rule PER TAG is NOT RATIFIED. This test asserts the
-    settled structure and rejects an implementation that smuggles concrete
-    per-tag numbers into the ratified block before ratification.
+Three tags, affects_settlement, manifest field scene_tag, unknown rejected.
+Per-tag INTERACTION rules (PVP / trade protection) are now RATIFIED from the
+source's explicit examples. Tax/notary RATES remain UNRATIFIED — smuggling a
+numeric rate is rejected.
 """
 import json
 import sys
@@ -35,18 +33,32 @@ def main():
     if drift:
         return emit(ID, "FAIL", "scenes.json ratified drift: " + "; ".join(drift))
 
-    # unratified per-tag rules must stay explicitly unratified — no smuggling
-    unrat = data.get("unratified", {})
-    if unrat.get("per_tag_rules") != "UNRATIFIED":
-        return emit(ID, "FAIL", "per_tag_rules must remain UNRATIFIED")
-    # bool is a subclass of int in Python — exclude it so legitimate boolean
-    # flags (affects_settlement / unknown_tag_rejected) are not mistaken for
-    # smuggled concrete tax numbers.
-    if any(isinstance(v, (int, float)) and not isinstance(v, bool)
-           for v in ratified.values()):
-        return emit(ID, "FAIL", "concrete numeric rule in ratified block before ratification")
+    rules = data.get("per_tag_rules", {})
+    if rules.get("status") != "RATIFIED":
+        return emit(ID, "FAIL", "per_tag_rules not RATIFIED")
+    expected = {
+        "peaceful": {"pvp_allowed": False, "trade_protected": True},
+        "raid": {"pvp_allowed": True, "trade_protected": False},
+        "contract": {"pvp_allowed": False, "trade_protected": True},
+    }
+    for tag, exp in expected.items():
+        got = rules.get(tag, {})
+        if any(got.get(k) != v for k, v in exp.items()):
+            return emit(ID, "FAIL", "%s rule drift: %r expected %r" % (tag, got, exp))
+    if len({(rules[t]["pvp_allowed"], rules[t]["trade_protected"]) for t in expected}) < 2:
+        return emit(ID, "FAIL", "tags have no behavioural difference")
 
-    return emit(ID, "PASS", "settled scene-tag structure OK; per-tag rules left unratified (not invented)")
+    # tax rate must stay unratified — no numeric smuggling
+    rate = data.get("tax_or_notary_rate", {})
+    if rate.get("status") != "UNRATIFIED" or rate.get("value") != "UNRATIFIED":
+        return emit(ID, "FAIL", "tax/notary rate must stay UNRATIFIED")
+    numeric = [tag for tag in expected if any(
+        isinstance(v, (int, float)) and not isinstance(v, bool)
+        for k, v in rules[tag].items() if "rate" in k or "tax" in k)]
+    if numeric:
+        return emit(ID, "FAIL", "numeric tax rate smuggled into: " + ",".join(numeric))
+
+    return emit(ID, "PASS", "3 tags with ratified PVP/trade rules; tax rate left UNRATIFIED")
 
 
 if __name__ == "__main__":
