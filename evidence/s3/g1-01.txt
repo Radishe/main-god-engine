@@ -1,0 +1,2 @@
+tier owner=shared_by_instance_and_player; source literals=0
+

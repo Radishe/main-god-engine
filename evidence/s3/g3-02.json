@@ -1,0 +1,6 @@
+{
+  "factor": 0.5,
+  "applies_to": "score",
+  "rate_ok": 0.8,
+  "rate_fail": 0.64
+}

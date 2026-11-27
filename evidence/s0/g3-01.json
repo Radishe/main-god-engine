@@ -1,0 +1,10 @@
+{
+  "frozen": [
+    "docs/01~09",
+    "docs/_reports/",
+    "_evidence/",
+    "D1~D13"
+  ],
+  "count": 4,
+  "matches_spec_11": true
+}

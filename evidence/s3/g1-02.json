@@ -1,0 +1,6 @@
+{
+  "model": "doubling",
+  "base_low": 1000,
+  "tiers": 10,
+  "recompute": "all_equal"
+}

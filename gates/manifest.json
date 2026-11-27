@@ -26,18 +26,18 @@
       {"gate": "G3", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S2-G3-01", "S2-G3-02", "S2-G3-03"]}
     ],
     "s3": [
-      {"gate": "G1", "layer": "config_driven", "status": "pending", "depends_on": ["config/tiers.json"], "tests": ["S3-G1-01", "S3-G1-02", "S3-G1-03"]},
-      {"gate": "G2", "layer": "config_driven", "status": "pending", "depends_on": ["config/scoring.json"], "tests": ["S3-G2-01", "S3-G2-02", "S3-G2-03"]},
-      {"gate": "G3", "layer": "config_driven", "status": "pending", "depends_on": ["config/scoring.json"], "tests": ["S3-G3-01", "S3-G3-02", "S3-G3-03"]},
-      {"gate": "G4", "layer": "config_driven", "status": "pending", "depends_on": ["config/penalty.json", "config/states.json"], "tests": ["S3-G4-01", "S3-G4-02", "S3-G4-03"]},
-      {"gate": "G5", "layer": "config_driven", "status": "pending", "depends_on": ["config/volume.json"], "tests": ["S3-G5-01", "S3-G5-02"]},
-      {"gate": "G6", "layer": "config_driven", "status": "pending", "depends_on": ["config/timeline.json"], "tests": ["S3-G6-01", "S3-G6-02", "S3-G6-03"]}
+      {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S3-G1-01", "S3-G1-02", "S3-G1-03"], "note": "D23 后续：配置定稿+测试补齐，从 config_driven+pending 激活"},
+      {"gate": "G2", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S3-G2-01", "S3-G2-02", "S3-G2-03"], "note": "D20 评分数值已定稿（scoring.json ACTIVE），三条测试转真断言"},
+      {"gate": "G3", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S3-G3-01", "S3-G3-02", "S3-G3-03"], "note": "权重作用点 factor_applies_to=score 已由 D20 定稿"},
+      {"gate": "G4", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S3-G4-01", "S3-G4-02", "S3-G4-03"], "note": "G4-01 按 D14 废弃单位机制保留真红；G4-02 验废弃状态；G4-03 验非抹杀态"},
+      {"gate": "G5", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S3-G5-01", "S3-G5-02"], "note": "体量上限 T4 保持 UNRATIFIED；G5-02 记录 D2 未产出"},
+      {"gate": "G6", "layer": "config_driven", "status": "pending", "depends_on": ["config/timeline.json"], "tests": ["S3-G6-01", "S3-G6-02", "S3-G6-03"], "note": "D23 显式封存：时间轴 T8/T9/T10 不拍、config/timeline.json 不建；本组保持 pending 为最终定性，不做假绿"}
     ],
     "s4": [
       {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S4-G1-01", "S4-G1-02", "S4-G1-03"]},
       {"gate": "G2", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S4-G2-01", "S4-G2-02"]},
       {"gate": "G3", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["S4-G3-01", "S4-G3-02"]},
-      {"gate": "G4", "layer": "human_in_loop", "status": "active", "depends_on": ["config/maintainers.json"], "tests": ["S4-G4-01", "S4-G4-02", "S4-G4-03"]}
+      {"gate": "G4", "layer": "human_in_loop", "status": "active", "depends_on": ["config/maintainers.json"], "tests": ["S4-G4-01", "S4-G4-02", "S4-G4-03"], "note": "D23 显式豁免 S4-G4-01/02：署名统一 Radishe + 单 owner review 导致自审死结，结构上不可达；不写假证据、不伪造 maintainers.json。S4-G4-03 不受影响"}
     ],
     "sc": [
       {"gate": "G1", "layer": "invariant", "status": "active", "depends_on": [], "tests": ["C09-01", "C10-01", "C13-01", "C14-01", "C30-01"], "note": "shared contract suite: waiting for P1/P3/P4 implementation, G1 golden path included"},
