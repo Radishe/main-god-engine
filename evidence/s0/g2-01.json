@@ -1,0 +1,14 @@
+{
+  "fields": [
+    "ability_ids",
+    "claims",
+    "completion",
+    "credit_delta",
+    "idempotency_key",
+    "instance_id",
+    "item_ids",
+    "reincarnator_id"
+  ],
+  "count": 8,
+  "matches_stub": true
+}

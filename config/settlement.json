@@ -1,0 +1,17 @@
+{
+  "$comment": "S0-G2-01/02 field table. Mirrors the frozen contract in gates/stubs/settlement.json (8 fields after D18: 6 required + 2 optional). No gameplay numbers; per-field type and required/optional ownership are declared here so the field table is machine-checkable. Maintainer-owned shared contract.",
+  "version": 2,
+  "source": "00 §3 S0-G2-01/02 / gates/stubs/settlement.json / D18",
+  "frozen": true,
+  "fields": {
+    "instance_id":    {"type": "string",        "required": true},
+    "reincarnator_id":{"type": "string",        "required": true},
+    "completion":     {"type": "enum",          "required": true, "values": ["success", "failure", "aborted"]},
+    "credit_delta":   {"type": "integer",       "required": true},
+    "ability_ids":    {"type": "array<string>", "required": true},
+    "item_ids":       {"type": "array<string>", "required": true},
+    "idempotency_key":{"type": "string",        "required": false},
+    "claims":         {"type": "string",        "required": false}
+  },
+  "note": "Field set locked by stub field_set_digest (I4). claims is a JSON-encoded string of structured evidence; encoding schema lives in the stub's claims_schema, not here."
+}

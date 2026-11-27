@@ -1,0 +1,5 @@
+{
+  "engine_core": "src/core",
+  "test_runner": "python -m unittest discover -s gates/tests",
+  "enum_source": "gates/stubs/settlement.json"
+}
