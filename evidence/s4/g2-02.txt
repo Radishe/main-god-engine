@@ -1,0 +1,6 @@
+基准分 -> removed
+结算模板 ID -> removed
+版本号 -> removed
+最低差异 -> removed
+can_modify_persistent_state -> removed
+阶位推导 -> removed
