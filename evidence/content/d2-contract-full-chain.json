@@ -15,5 +15,6 @@
     ]
   ],
   "cli": "valid",
-  "known_gap": "scene_tag is declarative metadata; no execution layer reads it (C15 interaction rules settled in config, tax rates UNRATIFIED)"
+  "enum_gate": "D25: CLI rejects unknown scene_tag from instance.json; config is truth source",
+  "known_gap": "contract behaviour (PVP/trade protection) remains declarative; engine does not change settlement by tag; tax rates UNRATIFIED (D22/D23)"
 }

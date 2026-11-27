@@ -7,13 +7,12 @@ must still work — that is what 'generality' means here.
 
   load -> notary.admit -> apply_event -> validate.py -> Engine.settle -> ledger
 
-SCOPE HONESTY: scene_tag is currently DECLARATIVE METADATA. C15 ratified its
-structure (enum/unknown-rejected/declared-by-author) and interaction rules
-(PVP/trade protection) in config/scenes.json, but no execution layer reads
-scene_tag yet, and tax/notary rates are explicitly UNRATIFIED (D22). This test
-verifies the settled structure + that the tag does not leak into the frozen
-manifest field set or the engine. It records the execution gap as a finding —
-it does NOT pretend contract behaviour is enforced in the engine.
+SCOPE HONESTY: scene_tag's ENUM is enforced by the CLI since D25 (an unknown
+tag is rejected at PR time, read from config/scenes.json against the instance
+declaration). But contract BEHAVIOUR (PVP/trade protection) remains declarative:
+the engine does not change settlement by tag, and tax/notary rates are UNRATIFIED
+(D22/D23). This test verifies the enum gate + that the tag never leaks into the
+frozen settlement manifest; it does NOT pretend contract behaviour is enforced.
 """
 import hashlib
 import json
@@ -27,6 +26,8 @@ from common import ROOT, emit
 sys.path.insert(0, str(ROOT))
 from src.core.ledger import Engine, digest
 from src.core.scoring import decode_claims, compute_payout
+from src.contract.manifest import validate_manifest
+from src.contract import ContractViolation
 import src.loader as loader
 import src.notary as notary
 import vocab as vocabulary
@@ -116,6 +117,23 @@ def main():
     if claims["volume"] != declared_volume or claims["score"] != declared_volume:
         return emit(ID, "FAIL", "claims score/volume must derive from D2 declaration")
 
+    # 5b. D25 enum gate: unknown scene_tag is rejected at PR time; relaxing the
+    # ratified enum lets the SAME tag pass — proving config is the truth source.
+    bad_d2 = dict(d2, scene_tag="unknown_xyz")
+    enum_rejected = False
+    try:
+        validate_manifest(mf, scene_instance=bad_d2)
+    except ContractViolation as exc:
+        enum_rejected = "scene_tag" in getattr(exc, "render", lambda: str(exc))()
+    if not enum_rejected:
+        return emit(ID, "FAIL", "CLI accepted unknown scene_tag (D25 enum gate missing)")
+    relaxed_scene = json.loads((ROOT / "config" / "scenes.json").read_text(encoding="utf-8"))
+    relaxed_scene["ratified"]["enum"].append("unknown_xyz")
+    try:
+        validate_manifest(mf, scene=relaxed_scene, scene_instance=bad_d2)
+    except ContractViolation:
+        return emit(ID, "FAIL", "scene enum not read from config (hardcoded?)")
+
     # 6. the single real ledger write; payout from scoring chain, not from tag
     engine.settle(dict(mf, idempotency_key="X07-D2-001"))
     h1 = sha(engine.ledger().as_dict())
@@ -136,11 +154,12 @@ def main():
         "instance": "D2", "scene_tag": "contract", "axes": sorted(axis_keys),
         "declared_volume": declared_volume, "payout": payout,
         "commits": hooks.commits, "cli": "valid",
-        "known_gap": "scene_tag is declarative metadata; no execution layer reads it "
-                     "(C15 interaction rules settled in config, tax rates UNRATIFIED)",
+        "enum_gate": "D25: CLI rejects unknown scene_tag from instance.json; config is truth source",
+        "known_gap": "contract behaviour (PVP/trade protection) remains declarative; "
+                     "engine does not change settlement by tag; tax rates UNRATIFIED (D22/D23)",
     }, ensure_ascii=False, indent=2), encoding="utf-8")
-    return emit(ID, "PASS", "D2 contract-tagged chain: disjoint axes + declared contract "
-                "settle identically; credits +%d; scene_tag stayed declarative (gap recorded)" % payout)
+    return emit(ID, "PASS", "D2 chain: disjoint axes settle identically; credits +%d; "
+                "scene_tag enum gated by CLI, contract behaviour stayed declarative" % payout)
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ content/instances/MY_STORY/
 | `events` | `[{tick:整数, kind:string, axis:已在 axes 声明的名称, delta:整数, label:string}]` |
 | `render_profile` | 枚举 `3d` / `2d_flat` / `graffiti`（见 `gates/stubs/loader.json`）；不影响结算 |
 | `asset_ids` | `[string]`，须命中主神公证资产库，否则入场公证被拒；可为空 |
-| `scene_tag` | 可选，枚举 `peaceful` / `raid` / `contract`；目前是**声明性元数据**，不改收益 |
+| `scene_tag` | 可选，枚举 `peaceful` / `raid` / `contract`；**未知值会被 CLI 拒**（D25）。枚举合法但行为仍是声明性元数据，不改收益 |
 | `settlement_evidence` | `{volume: 整数, completion_basis: string}`；`volume` 即理论最高分 |
 | `$comment` | ✅ **只有 instance.json 可以放** |
 
@@ -64,7 +64,7 @@ content/instances/MY_STORY/
 
 **禁止键**：`grade` / `credits` / `payout` / `coefficient`——引擎自己从 `score`/`volume` 重算收益，副本不得直给。
 
-> ⚠️ **CLI 通过 ≠ 设计合规**：`tools/validate.py` 只查结构（字段集、类型、公证、claims 结构与禁键、双报）。`shares` 加总、`main≥0.5`、轴取值范围等**设计规则 CLI 不查**——作者要自己守，审核会看。
+> ⚠️ **CLI 通过 ≠ 设计合规**：`tools/validate.py` 查结构，也硬拦已拍板且可二元的规则——`shares` 加总 1.0、`main≥0.5`、`scene_tag` 未知值（D25 前移，读 `config/scoring.json` / `config/scenes.json`）。但**轴取值范围**（无数值真源）、`volume` 是否合理（引擎重算 + T4 未拍上限）仍需作者自己守——机器不查不代表可以乱填。
 
 ---
 

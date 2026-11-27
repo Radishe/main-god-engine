@@ -1,7 +1,9 @@
-"""S3-G3-03: share table must satisfy ratified constraints (00 §6 / D20).
+"""S3-G3-03: share table must satisfy ratified constraints (00 §6 / D20 / D25).
 
 config/scoring.json share_rules: shares sum to 100, main >= min. Invalid
-shares are rejected by the real scoring validator. No new constraint invented.
+shares are rejected both by the engine validator AND by the CLI contract layer
+(D25 moved this ratified rule forward so a PR fails before settle()).
+No new constraint invented.
 """
 import json
 import sys
@@ -12,6 +14,8 @@ from common import ROOT, emit
 sys.path.insert(0, str(ROOT))
 from src.core.scoring import effective_score_and_rate
 from src.core.ledger import Rejected
+from src.contract.manifest import validate_manifest
+from src.contract import ContractViolation
 
 ID = "S3-G3-03"
 
@@ -43,11 +47,36 @@ def main():
     if not rejected:
         return emit(ID, "FAIL", "share table not summing to 100 was accepted")
 
+    # D25 forward-check: CLI must reject main_share below min even when the
+    # sum is exactly 1.0 (the case that previously slipped through).
+    mf_path = ROOT / "content" / "instances" / "D2" / "settlement.json"
+    if mf_path.is_file():
+        mf = json.loads(mf_path.read_text(encoding="utf-8"))
+        claims = json.loads(mf["claims"])
+        claims["main_share"], claims["side_share"] = 0.1, 0.9
+        mf["claims"] = json.dumps(claims, ensure_ascii=False, separators=(",", ":"))
+        cli_rejected = False
+        try:
+            validate_manifest(mf)
+        except ContractViolation as exc:
+            cli_rejected = "main_share" in getattr(exc, "render", lambda: str(exc))()
+        if not cli_rejected:
+            return emit(ID, "FAIL", "CLI accepted main_share=0.1 (D25 forward-check missing)")
+        # config is the truth source: lowering the floor lets the same value pass
+        relaxed = json.loads(json.dumps(data))
+        relaxed["share_rules"]["main_min_share"] = 0.05
+        try:
+            effective_score_and_rate(claims, relaxed)
+        except Rejected:
+            return emit(ID, "FAIL", "threshold not read from config (hardcoded?)")
+
     ev = ROOT / "evidence" / "s3"
     ev.mkdir(parents=True, exist_ok=True)
     (ev / "g3-03.log").write_text(
-        "legal shares accepted; 0.7+0.4=1.1 rejected; main_min_share=%s\n" % minimum, encoding="utf-8")
-    return emit(ID, "PASS", "share constraints enforced: legal passes, 110%% sum rejected")
+        "legal accepted; 0.7+0.4=1.1 rejected; D25 CLI rejects 0.1/0.9; "
+        "relaxed config accepts it (config is truth source); main_min_share=%s\n" % minimum,
+        encoding="utf-8")
+    return emit(ID, "PASS", "share constraints enforced in engine + CLI; config is truth source")
 
 
 if __name__ == "__main__":

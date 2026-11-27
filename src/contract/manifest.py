@@ -18,6 +18,7 @@ from pathlib import Path
 
 from ..core.ledger import Rejected
 from ..core.settlement import check_manifest
+from ..core import scoring  # D25: share rules — same function + same config truth-source
 
 ROOT = Path(__file__).resolve().parents[2]
 VOCAB_STUB = ROOT / "gates" / "stubs" / "vocabulary.json"
@@ -107,6 +108,59 @@ def volume_config(path=None):
     return data if isinstance(data, dict) else None
 
 
+def scene_config(path=None):
+    """Read config/scenes.json ratified block (or an explicit dict/path for tests).
+
+    D25: only an already-ratified, binary-judgable enum is enforced. When the
+    config is missing / not ratified / unknown_tag_rejected is not True, this
+    returns None and no scene-tag check runs — never invent a tag rule.
+    """
+    if isinstance(path, dict):
+        data = path
+    else:
+        target = Path(path) if path else ROOT / "config" / "scenes.json"
+        if not target.is_absolute() and not target.is_file():
+            target = ROOT / target
+        if not target.is_file():
+            return None
+        try:
+            data = json.loads(target.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+    if not isinstance(data, dict):
+        return None
+    ratified = data.get("ratified")
+    if not isinstance(ratified, dict) or ratified.get("unknown_tag_rejected") is not True:
+        return None
+    enum = ratified.get("enum")
+    if not isinstance(enum, list) or not enum:
+        return None
+    return ratified
+
+
+def instance_document(instance_id, path=None):
+    """Read content/instances/<id>/instance.json as (dict, raw_text).
+
+    D25: scene_tag lives on the declaration side, never in the frozen
+    settlement manifest. Missing/corrupt file -> (None, None), same tolerance
+    as loaded_instance_ids().
+    """
+    if path is not None:
+        target = Path(path)
+        if not target.is_absolute() and not target.is_file():
+            target = ROOT / target
+    else:
+        target = INSTANCES_DIR / str(instance_id) / "instance.json"
+    if not target.is_file():
+        return None, None
+    try:
+        text = target.read_text(encoding="utf-8")
+        data = json.loads(text)
+    except (OSError, ValueError):
+        return None, None
+    return (data, text) if isinstance(data, dict) else (None, None)
+
+
 # --------------------------------------------------------------------------
 # location helpers: field path + 1-based line number
 # --------------------------------------------------------------------------
@@ -175,12 +229,14 @@ def _numeric_limit(cfg):
 # --------------------------------------------------------------------------
 
 def validate_manifest(manifest, *, text=None, source=None, instances=None,
-                      notarized=None, volume=None):
+                      notarized=None, volume=None, scene=None,
+                      scene_instance=None, scene_instance_text=None):
     """Validate one settlement manifest; raise ContractViolation on the first breach.
 
     ``text`` is the original JSON text, used only to report a line number.
-    ``instances`` / ``notarized`` / ``volume`` are injectable context (tests may
-    pass their own); otherwise the shared read-only sources above are used.
+    ``instances`` / ``notarized`` / ``volume`` (and D25's ``scene`` /
+    ``scene_instance`` / ``scene_instance_text``) are injectable context for
+    tests; otherwise shared read-only sources are used.
     """
     region = source or "manifest"
 
@@ -199,6 +255,12 @@ def validate_manifest(manifest, *, text=None, source=None, instances=None,
         structural = {k: v for k, v in manifest.items() if k != volume_field}
     try:
         check_manifest(structural)
+        # D25: D20 share rules are already ratified and binary-judgable, so the
+        # CLI enforces them too (previously only settle() did, too late for PR).
+        # Same function + same config source as the engine — no duplicated rule.
+        if isinstance(manifest, dict) and "claims" in manifest and scoring.is_enabled():
+            scoring.validate_shares(scoring.decode_claims(manifest),
+                                    scoring.load_config())
     except Rejected as exc:
         raw = str(exc)
         field = _violation_field(raw)
@@ -225,6 +287,28 @@ def validate_manifest(manifest, *, text=None, source=None, instances=None,
         raise ContractViolation(
             "instance_id", "invalid_field",
             "instance_id %r is not a loaded instance (%s)" % (iid, region), path, line)
+
+    # 2b. D25 — scene_tag is declared on the INSTANCE side (never in the frozen
+    # settlement manifest). If C15's enum is ratified, reject unknown tags here.
+    # The field name itself is read from config — no second source of truth.
+    scene_cfg = scene_config() if scene is None else scene_config(scene)
+    if scene_cfg is not None:
+        field = scene_cfg.get("manifest_field")
+        if isinstance(field, str) and field:
+            if scene_instance is not None:
+                doc = scene_instance
+                scene_text = scene_instance_text
+            else:
+                doc, scene_text = instance_document(iid)
+            if isinstance(doc, dict) and field in doc:
+                tag = doc[field]
+                if tag not in scene_cfg["enum"]:
+                    path, line = _locate(scene_text, field)
+                    raise ContractViolation(
+                        field, "invalid_field",
+                        "%s=%r not in ratified enum %s (source=instance.json)" % (
+                            field, tag, scene_cfg["enum"]),
+                        path, line)
 
     # 3. F5-3 — ability_ids must be notarized (hit vocabulary + apply to instance).
     registry = notarized if notarized is not None else notarized_ids()

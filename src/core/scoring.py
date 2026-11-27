@@ -60,8 +60,12 @@ def decode_claims(manifest):
     return json.loads(raw) if isinstance(raw, str) else raw
 
 
-def _validate_shares(claims, cfg):
-    """D20: shares sum to 100% and main share has a floor."""
+def validate_shares(claims, cfg):
+    """D20: shares sum to 100% and main share has a floor.
+
+    Public since D25: the CLI contract layer calls this same function so the
+    rule has one implementation and one config truth-source (config/scoring.json).
+    """
     rules = cfg["share_rules"]
     main, side = claims.get("main_share"), claims.get("side_share")
     if not isinstance(main, (int, float)) or not isinstance(side, (int, float)):
@@ -89,7 +93,7 @@ def effective_score_and_rate(claims, cfg=None):
     Exposed so S3-G3-01 can assert the four main/side combinations deterministically.
     """
     cfg = cfg if cfg is not None else load_config()
-    _validate_shares(claims, cfg)
+    validate_shares(claims, cfg)
     volume, score = claims.get("volume"), claims.get("score")
     if not isinstance(volume, int) or isinstance(volume, bool) or volume <= 0:
         raise Rejected("invalid_field:claims:volume")

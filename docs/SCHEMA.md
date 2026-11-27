@@ -30,7 +30,7 @@ D18 把 `settle()` 从加法器升级为规则引擎：副本通过版本化 `cl
 
 - `claims` 以 JSON **字符串**编码（不是对象）；必需键：`schema_version`、`score`、`volume`、`main_share`、`side_share`、`main_failed`、`event_flags`，类型见 `gates/stubs/settlement.json` 的 `claims_schema.types`（shares 为 number、main_failed 为 boolean、event_flags 为 array\<string>）。
 - 裸 `score` / `grade` / `credits` 不作为支付值：禁止键见 `gates/stubs/settlement.json` 的 `claims_schema.forbidden_bare_keys`（`grade`/`credits`/`payout`/`coefficient`）；`score`/`volume` 只是供重算的证据。
-- 类型/禁键由 CLI 校验；**份额加总 100% 与 main≥0.5 是设计规则，仅评分链 `src/core/scoring.py` 校验，CLI 不查**——作者须自行保证。
+- 类型/禁键由 CLI 校验；**份额加总 100% 与 main≥0.5 由 CLI 与评分链共同硬拦（D25 前移，同一函数读 `config/scoring.json`）**——填错在 PR 阶段即被拒，不必等到 `settle()`。
 - 引擎只认中性键，不得读具体属性轴字面量（I2 扫描）；`engine_must_not_read` 登记了禁止读取的轴名。
 - D20 定稿的链条：份额加总 100%、体量 = 理论最高分 = 达成率分母；达成率区间 S/A/B/C/D/E 与系数、汇率 1:1 以 `config/scoring.json` 为准；E 系数为 0.1，F 为独立失败态走 D14 简化惩罚，不接失败/抹杀计数。
 - D21 定稿：阶位系数 `2^(n-1)`、区间下限 `1000×2^(n-1)`，副本阶位与玩家阶位共用同一把尺；以 `config/tiers.json` 为准。
@@ -44,7 +44,7 @@ C15 已拍板的结构部分（见 `config/scenes.json` 的 `ratified`）：
 
 交互规则（PVP / 交易保护）已由 C15 拍板，见 `config/scenes.json` 的 `per_tag_rules`（`status: RATIFIED`）。**税率 / 公证费数值仍为 `UNRATIFIED`**（`config/scenes.json` 的 `tax_or_notary_rate.value`），本文与 Schema 都不得塞入任何具体税率——那属于未拍板规则，须另行定稿。
 
-> 实现现状：`scene_tag` 目前是**声明性元数据**——引擎不因标签产生收益或行为差异，执行层尚未读取它（缺口见 `docs/00-阶段与验收标准.md` §13.33 与 `evidence/content/d2-contract-full-chain.json`）。未知标签拒绝也未落到 CLI/loader 代码路径。作者申报标签不会改变结算结果，不得假设它会。
+> 实现现状（D25）：`scene_tag` 的**枚举由 CLI 硬拦**——未知标签在 PR 阶段被拒（读 `config/scenes.json` 的 `ratified.enum` 与实例声明，字段名读 `manifest_field`）。但**契约行为（PVP / 交易保护）仍是声明性元数据**：引擎不因标签改变结算结果，税率维持 UNRATIFIED，不得假设申报标签会改变收益。
 
 ## 字段扩展与版本锁定
 
